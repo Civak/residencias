@@ -1,9 +1,9 @@
 
 <div class="animated fadeIn">
 <div class="modal-header gradient"><i class='fa fa-user fa-lg'></i> Escribir Mensaje en un Grupo</div>
+<form id="msj-palum">
 <div class="row align-center">
 <div class="col col-4">
-<form id="msj-palum">
 <br><br>
 <hr>
 	 <div class="form-item">

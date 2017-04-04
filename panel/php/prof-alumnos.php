@@ -51,7 +51,27 @@ class Alumnos{
     	$this->conn->close();
     	}
     	
-    	 public function misGrupos() {
+    	 public function msjEnviados() {
+    	$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+
+ 	   $cat = ''; 		
+    		$sql = "SELECT * FROM profe_msj WHERE profe_msj.rfc = '".$_SESSION['profesor']."' AND profe_msj.tipo = 'E' ORDER BY profe_msj.fecha DESC";
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+			        $cat .= "<div class='msjEnv'>".$row['msj']."<hr><div id='msj-elim' class='desc'>Enviado: ".$row['fecha']."<i id='msj-".$row['idmsj']."' style='float: right; cursor: pointer;' class='fa fa-close error'></i></div></div>";
+			    }
+			   
+			} 
+			
+			echo $cat;
+
+    	$this->conn->close();
+    	}
+		
+		public function misGrupos() {
     	$this->conn = new Conexion('../../../php/datosServer.php');
 		$this->conn = $this->conn->conectar();
 

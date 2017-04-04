@@ -40,7 +40,7 @@
 	$('div#contenido').on('click', 'button#guardar', function (e) {
 	e.preventDefault();
 	var form = $(this).closest('form').attr('id');
-	//console.log(form);
+	console.log(form+' msj');
 	if (evaluarModal(form)) {
 		switch(form) {
 			case 'rellenar-unidad':
@@ -76,6 +76,19 @@
 			case 'change-elim-alu':
 				Cookies.set('opcion','editar-contenido$ed-al-elim');
 				guardarFormData($('div#contenido').find("form#"+form)[0]);
+			break;
+			case 'msj-pgru':
+				var formData = new FormData();
+				formData.append("grupo", $('div#contenido').find("form#"+form+" select#grupo").val());
+				formData.append("msj", $('div#contenido').find("form#"+form+" div#editor").html());
+				guardar(formData);
+			break;
+			case 'msj-palum':
+				var formData = new FormData();
+				formData.append("grupo", $('div#contenido').find("form#"+form+" select#msj-gru").val());
+				formData.append("alumno", $('div#contenido').find("form#"+form+" select#msj-alu").val());
+				formData.append("msj", $('div#contenido').find("form#"+form+" div#editor").html());
+				guardar(formData);
 			break;
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
 			}
@@ -228,7 +241,7 @@
 		if (grupo != '') { 
 		obtenerDatos(grupo, 'form#msj-palum select#msj-alu', 'msj-profesor.php'); 
 		}
-		else{ $('div#contenido').find('form#msj-palum select#msj-alu').html('');}
+		else{ $('div#contenido').find('form#msj-palum select#msj-alu').html('<option value="">-- Alumnos --</option>');}
 	});
 	
 	
@@ -286,6 +299,10 @@
 			case 'change-elim-alu': 
 				return validarElimAlu(inputs, labels, modal);
 			break;
+			case 'msj-pgru':
+			case 'msj-palum': 
+				return validarMsj(inputs, labels, modal);
+			break;
 			}	
 	}
 	
@@ -303,6 +320,21 @@ function validarTarea(inputs, labels, modal, names) {
 			var contenido = $('div#contenido').find("form#"+modal+" div#editor").html();
 			for (var i = 0; i < inputs.length - 1; i++){
 				if (inputs[i].length == 0 && names[i] != 'archivo') {
+				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
+				return false;
+				}
+			}
+						if (contenido.length == 0){
+							$('div#contenido').find('div#msj').html(msjerror3+'Debes crear contenido antes de guardar.'+msjerror4);
+								return false;
+						}
+		return true;
+	}
+				/// validar creación de tarea
+function validarMsj(inputs, labels, modal) {
+			var contenido = $('div#contenido').find("form#"+modal+" div#editor").html();
+			for (var i = 0; i < inputs.length; i++){
+				if (inputs[i].length == 0) {
 				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
 				return false;
 				}
@@ -487,7 +519,7 @@ function guardar(form) {
                         break;
                   default: 
                   	  alertify.log(infoRegreso);
-                  	  //$('div#contenido').html('<img class="animated fadeIn" src="../../img/logoc.png" alt="">');
+                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logoc.png" alt="">');
                   }
                	},
                   error: function () {

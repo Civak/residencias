@@ -1,14 +1,14 @@
 
 <div class="animated fadeIn">
 <div class="modal-header gradient"><i class='fa fa-user fa-lg'></i> Escribir Mensaje en un Grupo</div>
+<form id="msj-pgru">
 <div class="row align-center">
 <div class="col col-4">
-<form id="msj-pgru">
 <br><br>
 <hr>
 	 <div class="form-item">
 	  <label>Mensaje para el Grupo</label>
-	  <select>
+	  <select name="grupo" id="grupo">
 		<?php
 			include('../../php/prof-alumnos.php');
 			$obj = new Alumnos();

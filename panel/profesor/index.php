@@ -39,29 +39,13 @@ include('../php/profesor-info.php');
 $obj = new Profesor();
 ?>
 <nav id="menu-profe">
-	<div class="row menu-row">
-    <div class="col col-4">
+	<div class="row align-right menu-row">
 
-    
-        <ul>
-            <li><a href="."><i id="tipso" data-tipso="Recargar página" class="fa fa-home fa-2x"></i></a></li>
-        </ul>
-	    
-		</div>
-	<div class="col col-4">
-
-        <form class="form">
-		    <div class="form-item">
-		        <input type="text" class="search small">
-		    </div>
-		</form>
-	</div>
 	
-	<div class="col col-2 offset-2">
+	<div class="col col-2">
 
         <ul id="direct">
-            <!-- <li><a href=""><i id="tipso" data-tipso="Programar examen" class="fa fa-paste fa-2x"></i></a></li> -->
-            <li><a href=""><i  data-component="dropdown" data-target="#bandeja" class="fa fa-envelope fa-2x"></i></a></li>
+
             <li><a id="foto"  data-component="dropdown" data-target="#perfil" href="">
 					<?php
 		            $obj->fotoPerfil();
@@ -81,21 +65,7 @@ $obj = new Profesor();
     </ul>
 </div>
 </div>
-<div id="mensajes">
-<div class="dropdown hide" id="bandeja">
-    <ul id="bandeja">
-    	<li><a id="msj-rec" href="#">Mensajes Recibidos <span style="font-size:10px;" class="label badge focus small">
-        <?php
-		$obj->misMsj();
-		?>
-        </span></a></li>
-    	  <li><a id="msj-env" href="#">Mensajes Enviados</a></li>
-        <li><a id="msj-alu" href="#">Enviar Mensaje Alumno</a></li>
-        <li><a id="msj-gru" href="#">Enviar Mensaje Grupo</a></li>
-    </ul>
-</div>
-</div>
-<br>
+
 <section id="pizarra">
 	<div class="row gutters">
     <div class="col col-2" id="info-grupos" >
@@ -118,7 +88,27 @@ $obj = new Profesor();
  		</div>
     </div>
     <div class="col col-8 contenido shadow" id="contenido"  ><img src="../../img/logobg.png" alt=""><div class="titulo2">Cursos Académicos Semipresenciales de los Institutos Tecnológicos</div></div>
-    <div class="col col-2 contenido shadow" >Mensajes, Bandeja, Usuarios</div>
+    <div class="col col-2">
+    <div class="paneles shadow">
+		<p> <img src="../../img/email.png" alt="Mis Mensajes"> Mis Mensajes</p>
+    <div id="mensajes">
+      <div id="bandeja" style="font-size:14px;">
+          <ul id="bandeja">
+              <li><a id="msj-rec" href="#">Recibidos <span style="font-size:10px;" class="label badge focus small">
+              	<div id="mis-msj">
+				  <?php
+                  $obj->misMsj();
+                  ?>
+              	</div>
+              </span></a></li>
+                <li><a id="msj-env" href="#">Enviados</a></li>
+              <li><a id="msj-alu" href="#">Enviar Mensaje Alumno</a></li>
+              <li><a id="msj-gru" href="#">Enviar Mensaje Pizarra</a></li>
+          </ul>
+      </div>
+      </div>
+    </div>
+    </div>
 	</div>
 </section>
 <a href="#" class="scrollToTop"><i class="fa fa-arrow-up fa-2x"></i></a>

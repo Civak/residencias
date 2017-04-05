@@ -255,12 +255,19 @@
 			      
 			    });
   });
-	
-	
- 
+        
+    setInterval(function()
+    {
+        $('div#mis-msj').fadeOut(400, function(){
+            Cookies.set('act','mis-msj');
+            obtenerAct('','','updates.php');
+        });
+    }, 30000);
+
   /********************************************************************
   *************** Sección de funciones
   *********************************************************************/
+    
    function preguntarUni(msj, tipo) {
   		alertify.prompt(msj,
 			    function (val, ev) {
@@ -623,6 +630,21 @@ function guardar(form) {
 							break;
 							default:  $('div#contenido').find(dato2).html(infoRegreso);
                 		}
+                	}
+            });
+		}
+        
+        				 // ---- Funcion para enviar uno o dos datos.
+	function obtenerAct(dato1, dato2, file) {
+		
+		$.ajax({ 
+				data: {'dato1': dato1, 'dato2': dato2},
+                url: '../php/'+file,
+                type: 'POST',
+					 async: false,
+                success: function (infoRegreso) {
+                	//console.log(infoRegreso);
+                    $('div#mis-msj').html(infoRegreso).fadeIn().delay(2000);
                 	}
             });
 		}

@@ -82,6 +82,13 @@ $(document).ready(function () {
 		Cookies.set('data', tipo+'-'+op[1]);
 		$('div#tareas-info').find('div.modal-body').load('menu/info-tarea.php');	   
   });
+    setInterval(function()
+    {
+        $('div#mis-msj').fadeOut(400, function(){
+            Cookies.set('act','mis-msj-alu');
+            obtenerAct('','','updates.php');
+        });
+    }, 30000);
 
   /********************************************************************
   *************** Sección de funciones
@@ -171,6 +178,21 @@ function guardar(form) {
 								$('div#contenido').find('div#bandeja-env div#'+dato1).remove();
                   		break;
                 		}
+                	}
+            });
+		}
+    
+           				 // ---- Funcion para enviar uno o dos datos.
+	function obtenerAct(dato1, dato2, file) {
+		
+		$.ajax({ 
+				data: {'dato1': dato1, 'dato2': dato2},
+                url: '../php/'+file,
+                type: 'POST',
+					 async: false,
+                success: function (infoRegreso) {
+                	//console.log(infoRegreso);
+                    $('div#mis-msj').html(infoRegreso).fadeIn().delay(2000);
                 	}
             });
 		}

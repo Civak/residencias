@@ -102,7 +102,9 @@ $obj = new Alumno();
     
 		<div class="paneles shadow">
 		<p> <img src="../../img/groups.jpg" alt="Mis Grupos"> Mis Cursos</p>
-
+			<?php
+			$obj->misGrupos();
+			?>
  		</div>
  		
  		<div class="paneles shadow">

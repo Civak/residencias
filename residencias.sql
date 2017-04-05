@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
--- https://www.phpmyadmin.net/
+-- version 4.5.1
+-- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 31-03-2017 a las 00:46:47
--- Versión del servidor: 10.1.21-MariaDB
--- Versión de PHP: 7.1.1
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 05-04-2017 a las 07:26:29
+-- Versión del servidor: 10.1.13-MariaDB
+-- Versión de PHP: 7.0.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -75,6 +75,21 @@ SELECT pro.rfc, CONCAT(pro.nombre,' ',pro.apepat,' ', pro.apemat) AS nom FROM ro
 CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminarDocs` (IN `gru` INT(11), IN `un` INT(2), IN `doc` TEXT)  NO SQL
 UPDATE unidades SET unidades.docs = REPLACE(unidades.docs, doc, '')  WHERE unidades.id_grup = gru AND unidades.unidad = un$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `guardarMsjAlum` (IN `rf` VARCHAR(13), IN `gru` INT(11), IN `ms` TEXT)  NO SQL
+BEGIN
+INSERT INTO profe_msj(rfc, msj, fecha,tipo,dirigido, quien, leido) VALUES (rf, ms, CURRENT_TIMESTAMP,'E',gru, 'A',1);
+INSERT INTO alum_msj(noc, msj,fecha,dequien,tipo,leido) VALUES(gru, ms,CURRENT_TIMESTAMP, rf, 'R',0);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `guardarMsjGrupo` (IN `rf` VARCHAR(13), IN `gru` INT(11), IN `ms` TEXT)  NO SQL
+INSERT INTO profe_msj(rfc, msj, fecha,tipo,dirigido, quien,leido) VALUES (rf, ms, CURRENT_TIMESTAMP,'E',gru, 'G',1)$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `guardarMsjProfe` (IN `nocc` INT(8), IN `gru` INT(11), IN `ms` TEXT)  NO SQL
+BEGIN
+INSERT INTO profe_msj(rfc, msj, fecha,tipo,dirigido, quien, leido) VALUES ((SELECT grupos.rfc FROM grupos WHERE grupos.id = gru), ms, CURRENT_TIMESTAMP,'R',nocc, 'A',0);
+INSERT INTO alum_msj(noc, msj,fecha,dequien,tipo,leido) VALUES(nocc, ms,CURRENT_TIMESTAMP, NULL, 'E',1);
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `guardarNvaCarrera` (IN `idd` VARCHAR(4), IN `carr` VARCHAR(64))  NO SQL
 INSERT INTO carreras VALUES(idd, carr)$$
 
@@ -98,6 +113,23 @@ SELECT * FROM alumnos WHERE alumnos.noc = noo$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `loginPersonal` (IN `rf` VARCHAR(13), IN `ro` SET('A','C','P'))  NO SQL
 SELECT pro.rfc, pro.pass, pro.nombre, roles.rol FROM profesores AS pro INNER JOIN roles ON pro.rfc = roles.rfc WHERE pro.rfc = rf AND roles.rol = ro$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `msjRecibidos` (IN `rf` VARCHAR(13))  NO SQL
+BEGIN
+UPDATE profe_msj SET profe_msj.leido = 1 WHERE profe_msj.rfc = rf;
+
+SELECT * FROM profe_msj INNER JOIN alumnos ON profe_msj.dirigido = alumnos.noc WHERE profe_msj.rfc = rf AND profe_msj.tipo = 'R' ORDER BY profe_msj.fecha DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `msjRecibidosAlum` (IN `nocc` INT(8))  NO SQL
+BEGIN
+UPDATE alum_msj SET alum_msj.leido = 1 WHERE alum_msj.noc = nocc;
+
+SELECT alum_msj.id, alum_msj.msj, alum_msj.fecha, CONCAT(profesores.nombre,' ',profesores.apepat,' ',profesores.apemat) AS nombre FROM alum_msj INNER JOIN profesores ON alum_msj.dequien = profesores.rfc WHERE alum_msj.noc = nocc AND alum_msj.tipo = 'R' ORDER BY alum_msj.fecha DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `pizarra` (IN `nocc` INT(8))  NO SQL
+SELECT gru.grupo, pro.msj, pro.fecha FROM gru_alum INNER JOIN grupos AS gru ON gru_alum.id_grup = gru.id INNER JOIN profe_msj AS pro ON gru.id = pro.dirigido WHERE gru_alum.noc = nocc ORDER BY pro.fecha DESC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `tareasPendientes` (IN `rf` VARCHAR(13))  NO SQL
 SELECT act.id, act.fec_ini, act.fec_lim, act.instrucciones, act.activa, act.unidad, act.titulo, grupos.grupo FROM actividades AS act INNER JOIN grupos ON act.id_grup = grupos.id where act.fec_ini < now() AND act.fec_lim > now() AND grupos.rfc = rf$$
@@ -212,12 +244,22 @@ DELIMITER ;
 CREATE TABLE `alum_msj` (
   `id` int(11) NOT NULL,
   `noc` int(8) NOT NULL,
-  `asunto` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   `msj` text COLLATE utf8_spanish_ci NOT NULL,
-  `docs` varchar(128) COLLATE utf8_spanish_ci DEFAULT NULL,
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `tipo` set('E','R') COLLATE utf8_spanish_ci NOT NULL
+  `dequien` varchar(13) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `tipo` set('E','R') COLLATE utf8_spanish_ci NOT NULL,
+  `leido` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `alum_msj`
+--
+
+INSERT INTO `alum_msj` (`id`, `noc`, `msj`, `fecha`, `dequien`, `tipo`, `leido`) VALUES
+(2, 10101011, 'Otro mensaje mas', '2017-04-04 22:44:47', 'SAHM720522FA4', 'R', 1),
+(3, 10101011, 'Hola Ana Maria, este es un mensaje de prueba desde el grupo de POO A confirmando envio :D', '2017-04-05 00:43:06', 'SAHM720522FA4', 'R', 1),
+(5, 10101011, 'Mensaje desde panel de alumno Ana Maria Lopez', '2017-04-05 02:46:31', NULL, 'E', 1),
+(6, 10101011, 'La raíz de índice par de un número negativo es el resultado de un número que, elevado al cuadrado, dé como resultado un número negativo. Este resultado no existe entre los números reales ya que todo número de cierto signo que se multiplica por el mismo número siempre dá de resultante un número positivo, es decir, todo numero elevado al cuadrado siempre es positivo a excepción del 0 que no tiene signo.', '2017-04-05 02:56:50', NULL, 'E', 1);
 
 -- --------------------------------------------------------
 
@@ -505,12 +547,27 @@ DELIMITER ;
 CREATE TABLE `profe_msj` (
   `idmsj` int(11) NOT NULL,
   `rfc` varchar(13) COLLATE utf8_spanish_ci NOT NULL,
-  `asunto` varchar(128) COLLATE utf8_spanish_ci NOT NULL,
   `msj` text COLLATE utf8_spanish_ci NOT NULL,
-  `docs` varchar(128) COLLATE utf8_spanish_ci DEFAULT NULL,
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `tipo` set('E','R') COLLATE utf8_spanish_ci NOT NULL
+  `tipo` set('E','R') COLLATE utf8_spanish_ci NOT NULL,
+  `dirigido` int(11) NOT NULL,
+  `quien` set('G','A') COLLATE utf8_spanish_ci NOT NULL,
+  `leido` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `profe_msj`
+--
+
+INSERT INTO `profe_msj` (`idmsj`, `rfc`, `msj`, `fecha`, `tipo`, `dirigido`, `quien`, `leido`) VALUES
+(9, 'SAHM720522FA4', 'Un sistema de gestión de aprendizaje es un software instalado en un servidor web que se emplea para administrar, distribuir y controlar las actividades de formación no presencial (o aprendizaje electrónico) de una institución u organización. Permitiendo un trabajo de forma asíncrona entre los participantes.\r\n<br>\r\n<br>Las principales funciones del sistema de gestión de aprendizaje son: gestionar usuarios, recursos así como materiales y actividades de formación, administrar el acceso, controlar y hacer seguimiento del proceso de aprendizaje, realizar evaluaciones, generar informes, gestionar servicios de comunicación como foros de discusión, videoconferencias, entre otros.\r\n<br>\r\n<br>Un sistema de gestión de aprendizaje, generalmente, no incluye posibilidades de autoría (crear sus propios contenidos), sino que se focaliza en gestionar contenidos creados por fuentes diferentes. La labor de crear los contenidos para los cursos se desarrolla mediante un Learning Content Management System (LCMS).<br><br><iframe width="560" height="315" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/mPBm19gf2Lc"></iframe><br>', '2017-04-04 23:50:44', 'E', 7, 'G', 1),
+(10, 'SAHM720522FA4', 'Cuando comencé a aprender cómo programar en Java, quedé totalmente confundido acerca de lo que significa "orientado a objetos". Los libros que tenía, explicaban los conceptos pobremente y después se saltaban directamente a tips avanzados de programación. Me sentía frustrado y perdido. Como no soy muy orientado a las matemáticas, necesitaba una buena analogía que me ayudara a entender la naturaleza de Java.\r\n<br>\r\n<br>Creé éste pequeño tutorial, no para que sea un recurso exaustivo de Java, sino mas bien, para introducir a los lectores el concepto de programación orientada a objetos de una manera menos-amenazante. Si todo va bien, los tendremos a todos en una bolsa protectora antes de una hora.\r\n<br>\r\n<br>Hay tres niveles diferentes en éste tutorial, codificados en colores. Verde es para aquellos lectores que quieren la más básica introducción. Está orientado a aquellos que no saben que es programación orientada a objetos y pueden usar ésta analogía para hacer las cosas un poco mas claras. Amarillo es para aquellos que quieren entender la programación orientada a objetos solo lo suficiente para leerla y seguirla, pero aun no están listos aun para aprender las complejidades de la codificación en Java. Y finalmente, el tercer nivel, rojo, es para ustedes los temerarios que quieren programar en Java, pero quieren que el proceso sea fácil y poco a poco.<br><br><a>Enlace del recurso</a>', '2017-04-05 00:42:30', 'E', 8, 'G', 1),
+(11, 'SAHM720522FA4', 'Hola Ana Maria, este es un mensaje de prueba desde el grupo de POO A confirmando envio :D', '2017-04-05 00:43:06', 'E', 10101011, 'A', 1),
+(12, 'SAHM720522FA4', 'Mensaje recibido para confirmar lectura.', '2017-04-05 00:53:34', 'R', 10101011, 'A', 1),
+(14, 'SAHM720522FA4', 'Mensaje', '2017-04-05 02:37:32', 'R', 10101011, 'A', 0),
+(15, 'SAHM720522FA4', 'Mensaje desde panel de alumno Ana Maria Lopez', '2017-04-05 02:46:31', 'R', 10101011, 'A', 0),
+(16, 'SAHM720522FA4', 'La raíz de índice par de un número negativo es el resultado de un número que, elevado al cuadrado, dé como resultado un número negativo. Este resultado no existe entre los números reales ya que todo número de cierto signo que se multiplica por el mismo número siempre dá de resultante un número positivo, es decir, todo numero elevado al cuadrado siempre es positivo a excepción del 0 que no tiene signo.', '2017-04-05 02:56:50', 'R', 10101011, 'A', 0),
+(17, 'SAHM720522FA4', 'Mensaje general al grupo POO A<br>', '2017-04-05 03:45:36', 'E', 7, 'G', 1);
 
 -- --------------------------------------------------------
 
@@ -700,7 +757,7 @@ ALTER TABLE `actividades`
 -- AUTO_INCREMENT de la tabla `alum_msj`
 --
 ALTER TABLE `alum_msj`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `examenes`
 --
@@ -730,7 +787,7 @@ ALTER TABLE `materias`
 -- AUTO_INCREMENT de la tabla `profe_msj`
 --
 ALTER TABLE `profe_msj`
-  MODIFY `idmsj` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idmsj` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- Restricciones para tablas volcadas
 --

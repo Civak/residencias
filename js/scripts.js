@@ -63,7 +63,7 @@ function loginCheck(form) {
                 //¿que hace antes de enviar?
                 },
                 success: function (infoRegreso) {
-                	//console.log(infoRegreso);
+                	console.log(infoRegreso);
                     switch(parseInt(infoRegreso))
                     {
                   case 1:

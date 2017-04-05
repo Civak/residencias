@@ -84,7 +84,11 @@ $obj = new Profesor();
 <div id="mensajes">
 <div class="dropdown hide" id="bandeja">
     <ul id="bandeja">
-    	<li><a id="msj-rec" href="#">Mensajes Recibidos</a></li>
+    	<li><a id="msj-rec" href="#">Mensajes Recibidos <span style="font-size:10px;" class="label badge focus small">
+        <?php
+		$obj->misMsj();
+		?>
+        </span></a></li>
     	  <li><a id="msj-env" href="#">Mensajes Enviados</a></li>
         <li><a id="msj-alu" href="#">Enviar Mensaje Alumno</a></li>
         <li><a id="msj-gru" href="#">Enviar Mensaje Grupo</a></li>

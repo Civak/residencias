@@ -1,6 +1,6 @@
 
 <div class="animated fadeIn">
-<div class="modal-header gradient"><i class='fa fa-send fa-lg'></i> Mensajes Enviados</div>
+<div class="modal-header gradient"><i class='fa fa-send fa-lg'></i> Pizarra</div>
 
 <div class="row align-center">
 <div id="bandeja-env" class="col col-9" style="overflow-y: auto; height:640px;">
@@ -10,7 +10,7 @@
 		<?php
 			include('../../php/prof-alumnos.php');
 			$obj = new Alumnos();
-			$obj->msjEnviados();
+			$obj->pizarra();
 		?>	  
 
 

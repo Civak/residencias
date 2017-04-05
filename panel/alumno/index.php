@@ -60,7 +60,7 @@ $obj = new Alumno();
 	<div class="col col-2 offset-2">
 
         <ul id="direct">
-            <li><a href=""><i id="tipso" data-tipso="Bandeja de entrada" class="fa fa-envelope fa-2x"></i></a></li>
+            <li><a href=""><i data-component="dropdown" data-target="#bandeja" class="fa fa-envelope fa-2x"></i></a></li>
             <li><a id="foto"  data-component="dropdown" data-target="#perfil" href="">
 					<?php
 		            $obj->fotoPerfil();
@@ -74,12 +74,26 @@ $obj = new Alumno();
 <div id="opciones">
 <div class="dropdown hide" id="perfil">
     <ul>
-    	  <li><a href="">Editar perfil</a></li>
-        <li><a href="">Cambiar contraseña</a></li>
-        <li><a href="../php/logout.php">Cerrar sesión</a></li>
+    	  <li><a href="#">Editar perfil</a></li>
+        <li><a href="#">Cambiar contraseña</a></li>
+        <li><a href="#">Cerrar sesión</a></li>
     </ul>
 </div>
 
+</div>
+<div id="mensajes">
+<div class="dropdown hide" id="bandeja">
+    <ul id="bandeja">
+    <li><a id="msj-piz" href="#">Pizarra</span></a></li>
+    	<li><a id="msj-rec" href="#">Mensajes Recibidos <span style="font-size:10px;" class="label badge focus small">
+        <?php
+		$obj->misMsj();
+		?>
+        </span></a></li>
+    	  <li><a id="msj-env" href="#">Mensajes Enviados</a></li>
+        <li><a id="msj-pro" href="#">Enviar Mensaje</a></li>
+    </ul>
+</div>
 </div>
 <br>
 <section id="pizarra">

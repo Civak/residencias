@@ -10,7 +10,7 @@
 		<?php
 			include('../../php/prof-alumnos.php');
 			$obj = new Alumnos();
-			$obj->msjEnviados();
+			$obj->msjEnviadosProfe();
 		?>	  
 
 

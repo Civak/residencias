@@ -69,7 +69,6 @@ class Login
                     		setcookie('info', $row['nombre'], 0, "/");
                         $_SESSION['alumno'] = $row["noc"];
                         $encontrado = true;
-                        $activo = $row['activo'];
                         break;
                     }
                 }
@@ -80,15 +79,7 @@ class Login
             $this->conn->close();
             if($encontrado)
             {
-            	//Es -2 en caso de existir en la BD, pero no esté activo.
-            	if(strcmp($activo, 'N') == 0){
-	            	if(isset($_SESSION['alumno'])){
-					            session_unset(); 
-					            session_destroy();
-					        }
-					        echo -2;
-            	}
-                else echo 1;
+				echo 1;
             }else echo -1;
     
     }

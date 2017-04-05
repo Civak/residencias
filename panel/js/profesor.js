@@ -40,7 +40,7 @@
 	$('div#contenido').on('click', 'button#guardar', function (e) {
 	e.preventDefault();
 	var form = $(this).closest('form').attr('id');
-	console.log(form+' msj');
+	//console.log(form+' msj');
 	if (evaluarModal(form)) {
 		switch(form) {
 			case 'rellenar-unidad':
@@ -243,6 +243,18 @@
 		}
 		else{ $('div#contenido').find('form#msj-palum select#msj-alu').html('<option value="">-- Alumnos --</option>');}
 	});
+	 /// Click en boton añadir una unidad o eliminarla
+  	$('div#contenido').on('click', 'div#bandeja-env i', function (e) {
+		e.preventDefault();
+	   var tipo = $(this).attr('id');
+	   alertify.confirm('Eliminarás el mensaje selecionado, ¿deseas continuar?',
+			    function () {
+					Cookies.set('opcion', 'bandeja$msj-elim');
+					eliminarDatos(tipo, '', 'bandeja.php');
+			    }, function() {
+			      
+			    });
+  });
 	
 	
  
@@ -573,20 +585,23 @@ function guardar(form) {
                 type: 'POST',
 					 async: false,
                 success: function (infoRegreso) {
-                	//console.log(infoRegreso);
+                console.log(infoRegreso);
                 	switch (parseInt(infoRegreso)) {
                 		case -1:
 							alertify.error('Ha ocurrido un error... intenta nuevamente.');
-							break;
-							case 1:
+						break;
+						case 1:
                 			alertify.log('Tarea eliminada correctamente.');
-                  	  $('div#contenido').find('div#t-'+dato1).remove();
-                  	break;
-							case 2:
+                  	  		$('div#contenido').find('div#t-'+dato1).remove();
+                  		break;
+						case 2:
 								var res = dato1.substring(0, 8);
 								$('div#contenido').find('div#'+res).remove();
                 			alertify.log('Documento eliminado correctamente.');
-                  	break;
+                  		break;
+						case 3:
+								$('div#contenido').find('div#bandeja-env div#'+dato1).remove();
+                  		break;
                 		}
                 	}
             });

@@ -113,6 +113,22 @@ class Alumno{
 	 	   else echo "No hay tareas pendientes.";
 	    	$this->conn->close();   	
     	}
+		
+		 public function misMsj() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+	
+    		$sql = "SELECT * FROM alum_msj WHERE alum_msj.noc = ".$_SESSION['alumno']." AND alum_msj.leido = 0";
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				echo $result->num_rows;
+			} else{
+				echo 0;	
+			}
+			
+    		$this->conn->close();
+    	}
     	
 }
 

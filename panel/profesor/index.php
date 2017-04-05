@@ -117,7 +117,7 @@ $obj = new Profesor();
 		</div>
  		</div>
     </div>
-    <div class="col col-8 contenido shadow" id="contenido"  ><img src="../../img/logoc.png" alt=""><div class="titulo2">Cursos Académicos Semipresenciales de los Institutos Tecnológicos</div></div>
+    <div class="col col-8 contenido shadow" id="contenido"  ><img src="../../img/logobg.png" alt=""><div class="titulo2">Cursos Académicos Semipresenciales de los Institutos Tecnológicos</div></div>
     <div class="col col-2 contenido shadow" >Mensajes, Bandeja, Usuarios</div>
 	</div>
 </section>

@@ -54,7 +54,7 @@ include('../includes/headers.php');
 <section class="btn-login" >
 	<div class="row align-center">
     <div class="col col-2" >
-    	<img src="../../img/logoc.png" alt="Cursos Académicos Semipresenciales de los Intitutos Tecnológicos">
+    	<img src="../../img/logobg.png" alt="Cursos Académicos Semipresenciales de los Intitutos Tecnológicos">
     </div>
 	</div>
 </section>

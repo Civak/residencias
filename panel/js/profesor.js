@@ -33,7 +33,7 @@
 		/// Click en cualquier boton de cancelar
 	$('div#contenido').on('click', 'button#cancel', function (e) {
 	e.preventDefault();
-	$('div#contenido').html('<img class="animated fadeIn" src="../../img/logoc.png" alt="">');
+	$('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
 });
 
 	/// Click en boton guardar
@@ -488,7 +488,7 @@ function guardarFormData(form) {
                   default: 
                   	 
                   	  alertify.log(infoRegreso);
-                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logoc.png" alt="">');
+                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
                   }
                	},
                   error: function () {
@@ -531,7 +531,7 @@ function guardar(form) {
                         break;
                   default: 
                   	  alertify.log(infoRegreso);
-                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logoc.png" alt="">');
+                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
                   }
                	},
                   error: function () {
@@ -569,7 +569,7 @@ function guardar(form) {
                 		break;
                 		default:
                 			alertify.log(infoRegreso);
-                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logoc.png" alt="">');
+                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
                 		}
                 		Cookies.set('opcion', 'crear-contenido$cr-te');
                 	}

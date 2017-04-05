@@ -46,10 +46,10 @@ class Alumno{
 											<div class="dropdown hide" id="re-'.$row['id'].'">
 											    <a href="" class="close show-sm"></a>
 											    <ul>
-<li id="re-ex"><a href=""><i class="fa fa-check"></i> Exámenes Pendientes</a></li>
+<li id="re-ex"><a href=""><i class="fa fa-calendar"></i> Exámenes Pendientes</a></li>
 <li id="re-ex"><a href=""><i class="fa fa-check"></i> Exámenes Realizados</a></li>
 <li id="re-cal"><a href=""><i class="fa fa-bar-chart"></i> Calificaciones</a></li>
-<li id="re-pe"><a href=""><i class="fa fa-archive"></i> Tareas Pendientes</a></li>
+<li id="re-pe"><a href=""><i class="fa fa-folder-open-o"></i> Tareas</a></li>
 <li id="re-ta"><a href=""><i class="fa fa-archive"></i> Tareas Entregadas</a></li>
 <li id="re-te"><a href=""><i class="fa fa-file-text-o"></i> Temario</a></li>
 											    </ul>

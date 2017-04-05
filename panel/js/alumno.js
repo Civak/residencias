@@ -24,6 +24,14 @@ $(document).ready(function () {
 	e.preventDefault();
 	$('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
 });
+    	/// Clicks en opciones del panel izquierdo
+	$('div#acciones').on('click', 'li', function (e) {
+		e.preventDefault();
+	   var file = $(this).attr('id');
+	   Cookies.set('opcion', $(this).parent().attr('id')+'$'+file);
+		Cookies.set('data', $(this).closest('span').attr('id'));
+		$('div#contenido').load('menu/'+file+'.php');
+	});
 /// Clicks en opciones del panel izquierdo
 	$('div#opciones').on('click', 'a', function (e) {
 		e.preventDefault();
@@ -72,6 +80,15 @@ $(document).ready(function () {
 			    }, function() {
 			      
 			    });
+  });
+     /// Click en boton de entregar tarea
+  	$('div#contenido').on('click', 'div.temario button', function (e) {
+		e.preventDefault();
+	   var tipo = $(this).attr('id');
+       if (typeof tipo !== 'undefined'){
+           Cookies.set('tarea', tipo);
+           $('div#contenido').load('menu/env-tar.php');
+       }
   });
     /// Clicks en panel tareas pendientes
 	$('div.tareas-p').on('click', 'div', function (e) {

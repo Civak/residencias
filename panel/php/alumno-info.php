@@ -88,11 +88,11 @@ class Alumno{
 			$this->conn = $this->conn->conectar();
 	 	   $cat = ''; 
 	 	   $encontrado = false; 	
-    		$sql = "CALL tareasPendientes('".$_SESSION['profesor']."')";
+    		$sql = "CALL tareasPendAlum(".$_SESSION['alumno'].")";
 			$result = $this->conn->query($sql);
 			if ($result->num_rows > 0) {
 			   while($row = $result->fetch_assoc()) {
-			        $cat .= "<div id='act-".$row['id']."' class='tareas box-tareas' title='Unidad: ".$row['unidad']."'><i class='fa fa-clipboard'></i> ".substr($row['grupo'], 0, 20)."...<br>";
+			        $cat .= "<div data-component='modal' data-target='#tareas-info' id='act-".$row['id']."' class='tareas box-tareas' title='Unidad: ".$row['unidad']."'><i class='fa fa-clipboard'></i> ".substr($row['grupo'], 0, 20)."...<br>";
 			        $cat .= "<span class='desc'>Fec. Ini: ".$row['fec_ini']."<br> Fec. Lim: ".$row['fec_lim']."</span>";
 			        $cat .= "</div>";
 			    }

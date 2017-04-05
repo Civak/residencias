@@ -73,6 +73,15 @@ $(document).ready(function () {
 			      
 			    });
   });
+    /// Clicks en panel tareas pendientes
+	$('div.tareas-p').on('click', 'div', function (e) {
+		e.preventDefault();
+		console.log('funciona');
+	   var tipo = $(this).attr('id');
+		var op = tipo.split('-');
+		Cookies.set('data', tipo+'-'+op[1]);
+		$('div#tareas-info').find('div.modal-body').load('menu/info-tarea.php');	   
+  });
 
   /********************************************************************
   *************** Sección de funciones

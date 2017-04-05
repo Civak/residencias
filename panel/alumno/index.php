@@ -109,7 +109,11 @@ $obj = new Alumno();
  		
  		<div class="paneles shadow">
 		<p> <img src="../../img/task.png" alt="Tareas Pendientes"> Tareas Pendientes</p>
-
+        <div class="tareas-p">
+			<?php
+			$obj->tareasPendientes();
+			?>
+        </div>
  		</div>
     </div>
     <div class="col col-8 contenido shadow" id="contenido"  ><img src="../../img/logobg.png" alt=""></div>
@@ -118,6 +122,11 @@ $obj = new Alumno();
 </section>
 <a href="#" class="scrollToTop"><i class="fa fa-arrow-up fa-2x"></i></a>
 
+<div id="tareas-info" class="modal-box hide"><div class="modal">
+    <span class="close"></span>
+    <div class="modal-header"><i class="fa fa-clipboard fa-lg"></i> Tarea</div>
+    <div class="modal-body"></div>
+</div></div>
 <!-- librerias -->
 <?php
 include('../includes/footers.php');

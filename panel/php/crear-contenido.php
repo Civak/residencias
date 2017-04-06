@@ -138,6 +138,47 @@ class Contenido{
 					}
 			$this->conn->close();
 			}
+    
+    /// Valida los archivos antes de subirlos a la unidad.		
+	public function subirTareaAlumno() {
+	 $dir = "../profesor/tareas/";
+	 $files = '';
+	     
+    for($i = 1; $i <= 5; $i++) {
+    		if(isset($_FILES["arch".$i])){
+					      if ($_FILES["arch".$i]["error"] > 0){
+					         $correctos = false;
+					         break;
+					      }
+					      else
+					      {
+					        $name = preg_replace('/\s+/', '', basename($_FILES["arch".$i]["name"]));
+					        $archivo = rand(1,300). "_".$_POST['idtar']."_".$_SESSION['alumno']."_".$name;
+					        $files .= $archivo.';';
+					        move_uploaded_file($_FILES["arch".$i]["tmp_name"], $dir.$archivo);
+					        chmod($dir.$archivo , 0777);
+					      }
+			    		}
+			    			
+					}
+		
+		
+				$this->guardarArchivoBDAlum($_POST['idtar'], $_SESSION['alumno'], $files);	
+			
+		}
+		/// Guarda archivo o archivos en la unidad correspondiente
+		public function guardarArchivoBDAlum($tarea, $alum, $files) {
+			$this->conn = new Conexion('../../php/datosServer.php');
+			$this->conn = $this->conn->conectar();
+            
+			$sql = "CALL cargarTarea(".$alum.",".$tarea.",'".$files."','".$_POST['msj']."');";
+				if ($this->conn->query($sql) === TRUE) {
+					    echo "Tarea enviada correctamente.";
+					} else {
+					    echo -1;
+					}
+			$this->conn->close();
+			}
 }
 
 /// Se utiliza cookie para swicheo
@@ -159,6 +200,9 @@ class Contenido{
         break;
         case 'cr-do':
             $datos->subirArchivo();
+        break;
+        case 're-pe':
+            $datos->subirTareaAlumno();
         break;
     }
 }

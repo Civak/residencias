@@ -62,6 +62,12 @@ $(document).ready(function () {
 				formData.append("msj", $('div#contenido').find("form#"+form+" div#editor").html());
 				guardar(formData);
 			break;
+            case 'env-tar':
+                Cookies.set('opcion', 'crear-contenido$re-pe');
+				var formData = new FormData($('div#contenido').find("form#"+form)[0]);
+				formData.append("msj", $('div#contenido').find("form#"+form+" div#editor").html());
+				guardar(formData);
+			break;
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
 			}
 		
@@ -86,8 +92,23 @@ $(document).ready(function () {
 		e.preventDefault();
 	   var tipo = $(this).attr('id');
        if (typeof tipo !== 'undefined'){
-           Cookies.set('tarea', tipo);
-           $('div#contenido').load('menu/env-tar.php');
+           Cookies.set('act', 'env-tar');
+
+           $.ajax({ 
+				data: {'dato1': tipo},
+                url: '../php/updates.php',
+                type: 'POST',
+					 async: false,
+                success: function (infoRegreso) {
+                	//console.log(infoRegreso);
+                    if(parseInt(infoRegreso) == 1){
+                        alertify.alert('La tarea ya fue enviada con anterioridad.');
+                        }else{
+                            Cookies.set('tarea', tipo);
+                            $('div#contenido').load('menu/env-tar.php');
+                        }
+                	}
+            });   
        }
   });
     /// Clicks en panel tareas pendientes
@@ -126,6 +147,9 @@ $(document).ready(function () {
 			case 'msj-pprof': 
 				return validarMsj(inputs, labels, modal);
 			break;
+            case 'env-tar': 
+                return validarTarea(inputs, labels, modal);
+			break;
 			}	
 	}
 					/// validar envio de mensaje
@@ -141,6 +165,16 @@ function validarMsj(inputs, labels, modal) {
 							$('div#contenido').find('div#msj').html(msjerror3+'Debes crear contenido antes de guardar.'+msjerror4);
 								return false;
 						}
+		return true;
+	}
+    
+    				/// validar creación de tarea
+function validarTarea(inputs, labels, modal) {
+			var contenido = $('div#contenido').find("div#editor").html();
+                if (contenido.length == 0){
+                    $('div#contenido').find('div#msj').html(msjerror3+'Debes crear contenido antes de guardar.'+msjerror4);
+                        return false;
+                }
 		return true;
 	}
 	
@@ -210,6 +244,19 @@ function guardar(form) {
                 success: function (infoRegreso) {
                 	//console.log(infoRegreso);
                     $('div#mis-msj').html(infoRegreso).fadeIn().delay(2000);
+                	}
+            });
+		}
+    function verificarTarea(dato1, dato2, file) {
+		
+		$.ajax({ 
+				data: {'dato1': dato1, 'dato2': dato2},
+                url: '../php/'+file,
+                type: 'POST',
+					 async: false,
+                success: function (infoRegreso) {
+                	//console.log(infoRegreso);
+                    return infoRegreso;
                 	}
             });
 		}

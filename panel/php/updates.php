@@ -39,6 +39,22 @@ class Consultas{
 			
     		$this->conn->close();
     	}
+    
+    public function verificarTarea() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+	    $tarea = explode('-',$_POST['dato1']);
+    		$sql = "SELECT * FROM tareas WHERE tareas.noc = ".$_SESSION['alumno']." AND tareas.id_act = ".$tarea[1];
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				echo 1;
+			} else{
+				echo 0;	
+			}
+			
+    		$this->conn->close();
+    	}
 
 }
 /// Se utiliza cookie para swicheo
@@ -53,6 +69,9 @@ class Consultas{
         break;
         case 'mis-msj-alu':
             $datos->misMsjAlu();
+        break;
+        case 'env-tar':
+            $datos->verificarTarea();
         break;
     }
     setcookie('act', null, -1, '/');

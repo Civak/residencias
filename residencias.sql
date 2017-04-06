@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-04-2017 a las 07:26:29
+-- Tiempo de generación: 06-04-2017 a las 06:31:18
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.6
 
@@ -62,6 +62,9 @@ ELSE
 	UPDATE unidades SET unidades.docs = CONCAT(doc,unidades.docs) WHERE unidades.id_grup = gru AND unidades.unidad = uni;
 END IF;
 END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cargarTarea` (IN `nocc` INT(8), IN `tar` INT(11), IN `doc` VARCHAR(512), IN `ms` TEXT)  NO SQL
+INSERT INTO tareas(tareas.noc, tareas.id_act, tareas.docs, tareas.contenido, tareas.fec_env, tareas.observaciones, tareas.calificacion) VALUES(nocc, tar, doc, ms, CURRENT_TIMESTAMP,NULL, NULL)$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `catalogoGrupos` (IN `mate` INT(11))  NO SQL
 SELECT gru.id, gru.grupo, DATE_FORMAT(gru.fecha, 'Registrado: %e %b %Y') AS fecha, gru.rfc, gru.activo, mat.materia, car.carrera, CONCAT(pro.nombre,' ',pro.apepat,' ', pro.apemat) AS nom FROM grupos AS gru INNER JOIN materias AS mat ON gru.materia = mat.id INNER JOIN carreras AS car ON mat.carrera = car.id INNER JOIN profesores AS pro ON gru.rfc = pro.rfc WHERE gru.materia = mate$$
@@ -131,6 +134,9 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `pizarra` (IN `nocc` INT(8))  NO SQL
 SELECT gru.grupo, pro.msj, pro.fecha FROM gru_alum INNER JOIN grupos AS gru ON gru_alum.id_grup = gru.id INNER JOIN profe_msj AS pro ON gru.id = pro.dirigido WHERE gru_alum.noc = nocc ORDER BY pro.fecha DESC$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `tareasPendAlum` (IN `nocc` INT(8))  NO SQL
+SELECT act.id, act.unidad, grupos.grupo, act.fec_ini, act.fec_lim FROM gru_alum INNER JOIN grupos ON gru_alum.id_grup = grupos.id INNER JOIN actividades AS act ON gru_alum.id_grup = act.id_grup WHERE gru_alum.activo = 'S' AND gru_alum.noc = nocc AND act.fec_ini < now() AND act.fec_lim > now()$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `tareasPendientes` (IN `rf` VARCHAR(13))  NO SQL
 SELECT act.id, act.fec_ini, act.fec_lim, act.instrucciones, act.activa, act.unidad, act.titulo, grupos.grupo FROM actividades AS act INNER JOIN grupos ON act.id_grup = grupos.id where act.fec_ini < now() AND act.fec_lim > now() AND grupos.rfc = rf$$
 
@@ -164,7 +170,9 @@ INSERT INTO `actividades` (`id`, `id_grup`, `docs`, `fec_ini`, `fec_lim`, `titul
 (20, 7, NULL, '2017-03-19 12:19:00', '2017-03-26 12:19:00', 'POO', 'Tarea', 'S', 2, 'T'),
 (21, 8, NULL, '2017-03-22 12:19:00', '2017-03-26 12:19:00', 'Clases abastractas', 'Contenido', 'S', 1, 'T'),
 (24, 7, '2_7_applications.html', '2017-03-24 17:47:00', '2017-03-26 17:47:00', 'Clases e Interfaces 2', '\r\n	\r\n	Clases e interfaces	', 'S', 2, 'T'),
-(25, 7, NULL, '2017-03-01 13:20:00', '2017-03-31 18:20:00', 'Algoritmos', '\r\n	Algoritmos<br><br>	', 'S', 1, 'T');
+(25, 7, NULL, '2017-03-01 13:20:00', '2017-03-31 18:20:00', 'Algoritmos', '\r\n	Algoritmos<br><br>	', 'S', 1, 'T'),
+(26, 7, NULL, '2017-04-02 07:56:00', '2017-04-07 07:56:00', 'Tarea POO', 'Antes de establecer los elementos del lenguaje, es necesario tener presentes los conceptos básicos de la programación orientada a objetos porque la sintaxis y el formato de Java están plenamente apegados a ellos.<br>Para empezar, todo parte del hecho de que el desarrollo de la programación de computadoras entró en crisis en los años 60 y 70 del s. XX porque las aplicaciones a menudo hacían cosas raras. Un caso es el del Centro de Cómputo Noruego en Oslo en el que desarrollaban simuladores de vuelo; sucedía, cuando los ejecutaban, que las naves colisionaban. Un análisis del problema probó que la aplicación confundía las características entre uno y otro objeto simulado; es decir, que la cantidad de combustible, la posición en el espacio o la velocidad de una nave eran atribuidas a otra. Se concluyó que esto se debía al modo como programaban y que los lenguajes de entonces eran incapaces de resolver el problema. Ante esto, los expertos del Centro Noruego desarrollaron Simula 67 que fue el primer lenguaje orientado a objetos. <br>Así que la POO es una manera de diseñar y desarrollar software que trata de imitar la realidad tomando algunos conceptos esenciales de ella; el primero de éstos es, precisamente, el de objeto, cuyos rasgos son la identidad, el estado y el comportamiento.', 'S', 1, 'T'),
+(27, 7, '28_7_Prueba.TXT', '2017-04-02 08:00:00', '2017-04-10 08:00:00', 'Tarea POO Pseudo', 'Tarea sobre pseudocódigo en java, se adjunta archivo.<br>', 'S', 1, 'T');
 
 --
 -- Disparadores `actividades`
@@ -259,7 +267,8 @@ INSERT INTO `alum_msj` (`id`, `noc`, `msj`, `fecha`, `dequien`, `tipo`, `leido`)
 (2, 10101011, 'Otro mensaje mas', '2017-04-04 22:44:47', 'SAHM720522FA4', 'R', 1),
 (3, 10101011, 'Hola Ana Maria, este es un mensaje de prueba desde el grupo de POO A confirmando envio :D', '2017-04-05 00:43:06', 'SAHM720522FA4', 'R', 1),
 (5, 10101011, 'Mensaje desde panel de alumno Ana Maria Lopez', '2017-04-05 02:46:31', NULL, 'E', 1),
-(6, 10101011, 'La raíz de índice par de un número negativo es el resultado de un número que, elevado al cuadrado, dé como resultado un número negativo. Este resultado no existe entre los números reales ya que todo número de cierto signo que se multiplica por el mismo número siempre dá de resultante un número positivo, es decir, todo numero elevado al cuadrado siempre es positivo a excepción del 0 que no tiene signo.', '2017-04-05 02:56:50', NULL, 'E', 1);
+(6, 10101011, 'La raíz de índice par de un número negativo es el resultado de un número que, elevado al cuadrado, dé como resultado un número negativo. Este resultado no existe entre los números reales ya que todo número de cierto signo que se multiplica por el mismo número siempre dá de resultante un número positivo, es decir, todo numero elevado al cuadrado siempre es positivo a excepción del 0 que no tiene signo.', '2017-04-05 02:56:50', NULL, 'E', 1),
+(7, 10101011, 'Mensaje para Ana Maria nuevamente, verifica actualización', '2017-04-05 21:16:57', 'SAHM720522FA4', 'R', 1);
 
 -- --------------------------------------------------------
 
@@ -392,7 +401,8 @@ CREATE TABLE `grupos` (
 INSERT INTO `grupos` (`id`, `materia`, `grupo`, `fecha`, `rfc`, `activo`) VALUES
 (7, 3, 'POO Grupo A', '2017-03-17 00:43:25', 'SAHM720522FA4', 'S'),
 (8, 3, 'POO Grupo B', '2017-03-17 00:44:14', 'SAHM720522FA4', 'S'),
-(9, 6, 'GPS A', '2017-03-29 14:50:08', 'VEFY860815NDA', 'S');
+(9, 6, 'GPS A', '2017-03-29 14:50:08', 'VEFY860815NDA', 'S'),
+(10, 3, 'GRUPO ELECTRONICA', '2017-04-05 15:02:11', 'OIOO641128AB6', 'S');
 
 --
 -- Disparadores `grupos`
@@ -518,6 +528,7 @@ CREATE TABLE `profesores` (
 --
 
 INSERT INTO `profesores` (`rfc`, `nombre`, `apepat`, `apemat`, `email`, `telefono`, `carrera`, `foto`, `pass`, `cv`, `activo`) VALUES
+('OIOO641128AB6', 'OCTAVIO SALUD', 'ORTIZ', 'ORTIZ', 'octavio@gmail.com', NULL, 'ISC', 'user.png', '$1$jG/.w03.$nKTEVVSoV7vQyYnOaTQvC.', NULL, 'S'),
 ('SAHM720522FA4', 'Miriam Zulma', 'Sanchez ', 'Hernandez', 'mzulma@gmail.com', NULL, 'ISC', 'user.png', '$1$IpF7KVhB$meD4uUD1K86i2JZsIjjWr0', NULL, 'S'),
 ('VEFY860815NDA', 'MA. YANETH', 'VEGA', 'FLORES', 'yaneth@gmail.com', NULL, 'ISC', 'user.png', '$1$k5jyZ2ZB$1wbn7w.vGf1BwfvlSd2fx0', NULL, 'S');
 
@@ -567,7 +578,8 @@ INSERT INTO `profe_msj` (`idmsj`, `rfc`, `msj`, `fecha`, `tipo`, `dirigido`, `qu
 (14, 'SAHM720522FA4', 'Mensaje', '2017-04-05 02:37:32', 'R', 10101011, 'A', 0),
 (15, 'SAHM720522FA4', 'Mensaje desde panel de alumno Ana Maria Lopez', '2017-04-05 02:46:31', 'R', 10101011, 'A', 0),
 (16, 'SAHM720522FA4', 'La raíz de índice par de un número negativo es el resultado de un número que, elevado al cuadrado, dé como resultado un número negativo. Este resultado no existe entre los números reales ya que todo número de cierto signo que se multiplica por el mismo número siempre dá de resultante un número positivo, es decir, todo numero elevado al cuadrado siempre es positivo a excepción del 0 que no tiene signo.', '2017-04-05 02:56:50', 'R', 10101011, 'A', 0),
-(17, 'SAHM720522FA4', 'Mensaje general al grupo POO A<br>', '2017-04-05 03:45:36', 'E', 7, 'G', 1);
+(17, 'SAHM720522FA4', 'Mensaje general al grupo POO A<br>', '2017-04-05 03:45:36', 'E', 7, 'G', 1),
+(18, 'SAHM720522FA4', 'Mensaje para Ana Maria nuevamente, verifica actualización', '2017-04-05 21:16:57', 'E', 10101011, 'A', 1);
 
 -- --------------------------------------------------------
 
@@ -586,6 +598,7 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`rfc`, `carrera`, `rol`) VALUES
+('OIOO641128AB6', 'ISC', 'P'),
 ('SAHM720522FA4', 'INF', 'C'),
 ('SAHM720522FA4', 'ISC', 'A'),
 ('SAHM720522FA4', 'ISC', 'C'),
@@ -601,11 +614,19 @@ INSERT INTO `roles` (`rfc`, `carrera`, `rol`) VALUES
 CREATE TABLE `tareas` (
   `noc` int(8) NOT NULL,
   `id_act` int(11) NOT NULL,
-  `docs` varchar(128) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cotenido` text COLLATE utf8_spanish_ci,
-  `fec_env` datetime NOT NULL,
-  `entregada` set('S','N') COLLATE utf8_spanish_ci NOT NULL
+  `docs` varchar(512) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `contenido` text COLLATE utf8_spanish_ci,
+  `fec_env` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `observaciones` text COLLATE utf8_spanish_ci,
+  `calificacion` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `tareas`
+--
+
+INSERT INTO `tareas` (`noc`, `id_act`, `docs`, `contenido`, `fec_env`, `observaciones`, `calificacion`) VALUES
+(10101011, 26, '105_26_10101011_index.php;232_26_10101011_index.php;', 'Envio de Tarea de Ana Maria', '2017-04-06 00:50:04', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -634,7 +655,11 @@ INSERT INTO `unidades` (`id_grup`, `unidad`, `contenido`, `docs`) VALUES
 (7, 7, NULL, NULL),
 (8, 1, '<h4>Temario de la Unidad 1</h4>Tema 1<br>Tema 2<br>Tema 4', NULL),
 (8, 2, NULL, NULL),
-(8, 3, NULL, NULL);
+(8, 3, NULL, NULL),
+(10, 1, '\r\n	Historia de los lenguajes de programación<br><iframe width="560" height="315" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/H5A5eXbyPxM"></iframe><br>', NULL),
+(10, 2, NULL, NULL),
+(10, 3, NULL, NULL),
+(10, 4, NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -752,12 +777,12 @@ ALTER TABLE `unidades`
 -- AUTO_INCREMENT de la tabla `actividades`
 --
 ALTER TABLE `actividades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT de la tabla `alum_msj`
 --
 ALTER TABLE `alum_msj`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `examenes`
 --
@@ -777,7 +802,7 @@ ALTER TABLE `foro_msj`
 -- AUTO_INCREMENT de la tabla `grupos`
 --
 ALTER TABLE `grupos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT de la tabla `materias`
 --
@@ -787,7 +812,7 @@ ALTER TABLE `materias`
 -- AUTO_INCREMENT de la tabla `profe_msj`
 --
 ALTER TABLE `profe_msj`
-  MODIFY `idmsj` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `idmsj` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 --
 -- Restricciones para tablas volcadas
 --

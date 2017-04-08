@@ -1884,7 +1884,7 @@ if (typeof jQuery === 'undefined') {throw new Error('Kube\'s requires jQuery')};
             show: false,
     		url: false,
     		header: false,
-    		width: '400px', // string
+    		width: '600px', // string
     		height: false, // or string
     		maxHeight: false,
     		position: 'center', // top or center

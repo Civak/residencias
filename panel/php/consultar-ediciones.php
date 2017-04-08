@@ -143,6 +143,36 @@ private $conn;
 			else echo '<div class="message error" data-component="message">La matería aún no tiene unidades, añade unidades...<span class="close small"></span></div>';
     	$this->conn->close();
 		}
+    
+    public function consultarTareaAlum($tarea, $alumno) {
+		$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+		
+		$temario = '';
+		$sql = "SELECT act.fec_ini, act.fec_lim,act.titulo,act.instrucciones,act.unidad, tar.docs,tar.observaciones,tar.calificacion,tar.fec_env, tar.contenido FROM actividades AS act INNER JOIN tareas AS tar ON act.id = tar.id_act WHERE act.id = ".$tarea." AND tar.noc = ".$alumno;
+				
+		$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+			        $temario = array($this->obtenerArchivosAlum($row['docs']), $row['fec_ini'], $row['fec_lim'],$row['titulo'], $row['instrucciones'], $row['fec_env'], $row['observaciones'],$row['calificacion'],$row['contenido']);
+			    }
+			}
+			
+		return $temario;	
+		$this->conn->close();
+		}
+		
+		public function obtenerArchivosAlum($str) {
+            $arch = explode(";", $str);
+    		$docs = '<div class="docs"><b><i class="fa fa-file-archive-o fa-lg"></i> Documentos Enviados:</b><hr>';
+            for($i = 0; $i < count($arch) - 1;$i++){
+    			$docs .= '<a href="http://proyecto.myft.org/proyecto/residencias/panel/profesor/tareas/'.$arch[$i].'" download>'.$arch[$i].'</a><br>';
+            }
+    		
+    		
+    		return $docs.'</div>';
+    	}
 
 }
 ?>

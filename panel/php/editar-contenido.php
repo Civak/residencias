@@ -166,6 +166,22 @@ class Editar{
 			}
 			$this->conn->close();
     	}
+    
+        public function passAlu() {
+    		$this->conn = new Conexion('../../php/datosServer.php');
+			$this->conn = $this->conn->conectar();
+			error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	 	   $pass = crypt($_POST['pass']);
+	 	   
+			$sql = "UPDATE alumnos SET alumnos.pass = '".$pass."' WHERE alumnos.noc =".$_SESSION['alumno'];
+
+			if ($this->conn->query($sql) === TRUE) {
+			    echo "Cambio de contraseña correctamente.";
+			} else {
+			    echo -1;
+			}
+			$this->conn->close();
+    	}
     	
     	public function actInfoAlu() {
     		$this->conn = new Conexion('../../php/datosServer.php');
@@ -222,8 +238,11 @@ class Editar{
         case 'el-do':
             $datos->eliminarDocs();
         break;
-		  case 'ed-al-pass':
+        case 'ed-al-pass':
             $datos->actPassAlu();
+        break;
+        case 'al-pass':
+            $datos->passAlu();
         break;
         case 'ed-al-info':
             $datos->actInfoAlu();

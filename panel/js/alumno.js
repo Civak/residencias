@@ -68,6 +68,10 @@ $(document).ready(function () {
 				formData.append("msj", $('div#contenido').find("form#"+form+" div#editor").html());
 				guardar(formData);
 			break;
+            case 'change-pass':
+                Cookies.set('opcion','editar-contenido$al-pass');
+				guardarFormData($('div#contenido').find("form#"+form)[0]);
+            break;
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
 			}
 		
@@ -120,6 +124,15 @@ $(document).ready(function () {
 		Cookies.set('data', tipo+'-'+op[1]);
 		$('div#tareas-info').find('div.modal-body').load('menu/info-tarea.php');	   
   });
+      /// Clicks en panel tareas pendientes
+	$('div#contenido').on('click', 'div.rev-tareas a', function (e) {
+		e.preventDefault();
+		console.log('funciona');
+	   var tipo = $(this).attr('id');
+		Cookies.set('data', tipo);
+		$('div#tareas-entre').find('div.modal-body').load('menu/det-tarea.php');	   
+  });
+
     setInterval(function()
     {
         $('div#mis-msj').fadeOut(400, function(){
@@ -150,6 +163,9 @@ $(document).ready(function () {
             case 'env-tar': 
                 return validarTarea(inputs, labels, modal);
 			break;
+            case 'change-pass': 
+                return validarNvoPassAlu(inputs, labels, modal);
+			break;
 			}	
 	}
 					/// validar envio de mensaje
@@ -177,7 +193,51 @@ function validarTarea(inputs, labels, modal) {
                 }
 		return true;
 	}
+    /// Valida nuevo pass
+	function validarNvoPassAlu(inputs, labels, modal) {
+		for (var i = 0; i < inputs.length; i++) {     
+			if (inputs[i].length < 4) {
+		    	$('div#contenido').find('div#msj').html(msjerror3+'Escribe una contraseña de al menos 4 caracteres.'+msjerror4);
+		        return false;
+		    }
+		}
+		return true;
+		}
 	
+    		/// Guarda informacion
+function guardarFormData(form) {
+	var doc = Cookies.get('opcion');
+	var file = doc.split('$');
+		var formulario = new FormData(form);
+					$.ajax({
+                data: formulario, 
+                url: '../php/'+file[0]+'.php',
+                type: 'post',
+                async: false,
+		          cache: false,
+		          contentType: false,
+		          processData: false,
+                beforeSend: function () {
+                //¿que hace antes de enviar?
+                },
+                success: function (infoRegreso) {
+                	//console.log(infoRegreso);
+                    switch(parseInt(infoRegreso))
+                    {
+               	case -1:
+                       $('div#contenido').find('div#msj').html(msjerror3+'Ha ocurrido un error'+msjerror4);
+                        break;
+                  default: 
+                  	 
+                  	  alertify.log(infoRegreso);
+                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
+                  }
+               	},
+                  error: function () {
+                     alertify.error("Ups... ha ocurrido un error, intenta nuevamente.");
+                  }
+            });
+		}
 					/// Guarda informacion
 function guardar(form) {
 	var doc = Cookies.get('opcion');

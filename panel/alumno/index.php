@@ -55,8 +55,8 @@ $obj = new Alumno();
 <div id="opciones">
 <div class="dropdown hide" id="perfil">
     <ul>
-    	  <li><a href="#">Editar perfil</a></li>
-        <li><a href="#">Cambiar contraseña</a></li>
+    	  <li><a id="ed-per" href="#">Editar perfil</a></li>
+        <li><a id="cam-pas" href="#">Cambiar contraseña</a></li>
         <li><a href="#">Cerrar sesión</a></li>
     </ul>
 </div>
@@ -112,6 +112,11 @@ $obj = new Alumno();
 <div id="tareas-info" class="modal-box hide"><div class="modal">
     <span class="close"></span>
     <div class="modal-header"><i class="fa fa-clipboard fa-lg"></i> Tarea</div>
+    <div class="modal-body"></div>
+</div></div>
+<div id="tareas-entre" class="modal-box hide"><div class="modal">
+    <span class="close"></span>
+    <div class="modal-header"><i class="fa fa-clipboard fa-lg"></i> Detalles de Tarea</div>
     <div class="modal-body"></div>
 </div></div>
 <!-- librerias -->

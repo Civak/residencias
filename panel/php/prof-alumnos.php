@@ -29,6 +29,25 @@ class Alumnos{
 			else return -1;
     	$this->conn->close();
     	}
+     		   /// ----------- Obtiene los grupos del profesor panel izquierdo
+    public function consultarAlumnoEdit() {
+    	$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+		$datos = explode('-', $_COOKIE['data']); 
+
+ 	   $cat = ''; 		
+    		$sql = "SELECT * FROM alumnos WHERE alumnos.noc = ".$_SESSION['alumno'];
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+			        $cat = $row['nombre'].','.$row['foto'];
+			    }
+			} 
+			
+			return $cat;
+    	$this->conn->close();
+    	}
     	// ---------------------------------------------------
     	 public function consultarProfesor() {
     	$this->conn = new Conexion('../../../php/datosServer.php');

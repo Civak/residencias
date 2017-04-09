@@ -182,6 +182,22 @@ class Editar{
 			}
 			$this->conn->close();
     	}
+    
+        public function passPro() {
+    		$this->conn = new Conexion('../../php/datosServer.php');
+			$this->conn = $this->conn->conectar();
+			error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	 	   $pass = crypt($_POST['pass']);
+	 	   
+			$sql = "UPDATE profesores SET profesores.pass = '".$pass."' WHERE profesores.rfc ='".$_SESSION['profesor']."'";
+
+			if ($this->conn->query($sql) === TRUE) {
+			    echo "Cambio de contraseña correctamente.";
+			} else {
+			    echo -1;
+			}
+			$this->conn->close();
+    	}
     	
     	public function actInfoAlu() {
     		$this->conn = new Conexion('../../php/datosServer.php');
@@ -213,6 +229,65 @@ class Editar{
 			}
 			$this->conn->close();
     	}
+    
+    public function actPerAlu() {
+    		$this->conn = new Conexion('../../php/datosServer.php');
+			$this->conn = $this->conn->conectar();
+			
+			if($_FILES['sel-img']["size"] != 0){
+                    $this->cargarImagenes('sel-img');
+				}else{
+                 $sql = "UPDATE alumnos SET alumnos.nombre = '".$_POST['nom']."' WHERE alumnos.noc = ".$_SESSION['alumno'];
+                if ($this->conn->query($sql) === TRUE) {
+                           echo 2;
+                        } else {
+                        echo -1;
+                        }
+            }
+			$this->conn->close();
+    	}
+    
+        function cargarImagenes($imagen)
+        {
+			// Donde se guardaran las imágenes en el server?
+            $ruta = "../alumno/img/";
+            
+              $nombreAntiguo = $_FILES[$imagen]['name'];
+              $nombre_tmp = $_FILES[$imagen]['tmp_name'];
+              $tipo = $_FILES[$imagen]['type'];
+            
+			  // Proceso de regex que evalua si son extensiones validas.
+              $ext_permitidas = array('jpg','jpeg','gif','png');
+              $partes_nombre = explode('.', $nombreAntiguo);
+              $extension = end( $partes_nombre );
+              $extension = strtolower($extension);
+              $nombre = 'i'.$_SESSION['alumno'].".".$extension;
+              $ext_correcta = in_array($extension, $ext_permitidas);
+            
+              $tipo_correcto = preg_match('/^image\/(pjpeg|jpeg|gif|png)$/', $tipo);
+            
+            
+              if( $ext_correcta && $tipo_correcto){
+                if( $_FILES[$imagen]['error'] > 0 ){
+                  echo -1;
+                }else{
+            
+                    move_uploaded_file($nombre_tmp, $ruta.$nombre);
+                    chmod($ruta.$nombre, 0777);
+
+                     $sql = "UPDATE alumnos SET alumnos.nombre = '".$_POST['nom']."', alumnos.foto = '".$nombre."' WHERE alumnos.noc = ".$_SESSION['alumno'];
+                        if ($this->conn->query($sql) === TRUE) {
+                           echo 2;
+                        } else {
+                        echo -1;
+                        }
+                  
+                }
+              }else{
+                  die();
+                  echo -1;
+              }
+        }
 }
 
 /// Se utiliza cookie para swicheo
@@ -244,11 +319,20 @@ class Editar{
         case 'al-pass':
             $datos->passAlu();
         break;
+        case 'pro-pass':
+            $datos->passPro();
+        break;
         case 'ed-al-info':
             $datos->actInfoAlu();
         break;
         case 'ed-al-elim':
             $datos->eliminarAlu();
+        break;
+        case 'ed-alum':
+            echo $datos->actPerAlu();
+        break;
+        case 'ed-pro':
+            echo "hola";
         break;
     }
 }

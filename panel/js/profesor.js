@@ -83,11 +83,21 @@
 				formData.append("msj", $('div#contenido').find("form#"+form+" div#editor").html());
 				guardar(formData);
 			break;
+            case 'change-pass':
+                Cookies.set('opcion','editar-contenido$pro-pass');
+				guardarFormData($('div#contenido').find("form#"+form)[0]);
+            break;
 			case 'msj-palum':
 				var formData = new FormData();
 				formData.append("grupo", $('div#contenido').find("form#"+form+" select#msj-gru").val());
 				formData.append("alumno", $('div#contenido').find("form#"+form+" select#msj-alu").val());
 				formData.append("msj", $('div#contenido').find("form#"+form+" div#editor").html());
+				guardar(formData);
+			break;
+            case 'edit-per':
+                Cookies.set('opcion', 'editar-contenido$ed-pro');
+				var formData = new FormData($('div#contenido').find("form#"+form)[0]);
+				formData.append("cv", $('div#contenido').find("form#"+form+" div#editor").html());
 				guardar(formData);
 			break;
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
@@ -322,6 +332,12 @@
 			case 'msj-palum': 
 				return validarMsj(inputs, labels, modal);
 			break;
+            case 'change-pass': 
+                return validarNvoPass(inputs, labels, modal);
+			break;
+            case 'edit-per': 
+                return validarNvoPerfil(inputs, labels, modal);
+			break;
 			}	
 	}
 	
@@ -334,6 +350,33 @@ function validarContenidoUnidad(inputs, labels, modal) {
 						}
 		return true;
 	}
+           /// Valida nuevo pass
+	function validarNvoPass(inputs, labels, modal) {
+		for (var i = 0; i < inputs.length; i++) {     
+			if (inputs[i].length < 4) {
+		    	$('div#contenido').find('div#msj').html(msjerror3+'Escribe una contraseña de al menos 4 caracteres.'+msjerror4);
+		        return false;
+		    }
+		}
+		return true;
+		}
+          /// Valida nuevo perfil
+	function validarNvoPerfil(inputs, labels, modal) {
+            var file = $('div#contenido').find('form#edit-per input#sel-img').val();
+            var extension = file.split('.').pop().toUpperCase();
+            if(file.length > 0 && (extension!="PNG" && extension!="JPG" && extension!="GIF" && extension!="JPEG")) {
+                $('div#contenido').find('div#msj').html(msjerror3+'La imagen no tiene formato válido.'+msjerror4);
+                        return false;
+            }
+
+		for (var i = 1; i < inputs.length - 1; i++) {     
+			if (inputs[i].length == 0) {
+		    	$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
+		        return false;
+		    }
+		}
+		return true;
+		}
 			/// validar creación de tarea
 function validarTarea(inputs, labels, modal, names) {
 			var contenido = $('div#contenido').find("form#"+modal+" div#editor").html();

@@ -86,7 +86,7 @@ public function ConsultarUnidades(){
     		$docs = '<div class="docs"><b><i class="fa fa-file-archive-o fa-lg"></i> Documentos:</b><hr>';
     		$files = explode(';', $str);
     		for($i = 0; $i < count($files) - 1;$i++) {
-    			$docs .= '<a href="./docs/'.$files[$i].'" download>'.$files[$i].'</a><br>';
+    			$docs .= '<a href="http://proyecto.myftp.org/proyecto/residencias/panel/profesor/docs/'.$files[$i].'" download>'.$files[$i].'</a><br>';
     		}
     		
     		return $docs.'</div>';

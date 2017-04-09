@@ -6,7 +6,7 @@ $info = explode(',', $obj->consultarAlumnoEdit());
 <!-- Modal -->
 <div class="animated fadeIn">
 <div class="modal-header gradient"><i class='fa fa-user fa-lg'></i> Editar / Actualizar Perfil</div>
-
+<form id="edit-per">
 <br>
 			        				<div class="row align-center" style="margin-bottom: 2%;">
 			        					<div class="col col-4">
@@ -36,13 +36,15 @@ $info = explode(',', $obj->consultarAlumnoEdit());
 										    </div>
 			        					</div>
 			        				</div>
+    <br>
+    <div id="msj"></div>
 			        				<br><hr>
     <div class="row align-center">
         <div class="col col-3">
         <button class="button w100 animated fadeIn" id="guardar">Guardar</button>
         </div>
     </div>
-
+</form>
 	<br><br>
 	<div class="row align-right">
 				<div class="col col-2">

@@ -72,6 +72,10 @@ $(document).ready(function () {
                 Cookies.set('opcion','editar-contenido$al-pass');
 				guardarFormData($('div#contenido').find("form#"+form)[0]);
             break;
+            case 'edit-per':
+                Cookies.set('opcion','editar-contenido$ed-alum');
+				guardarFormData($('div#contenido').find("form#"+form)[0]);
+            break;
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
 			}
 		
@@ -166,6 +170,9 @@ $(document).ready(function () {
             case 'change-pass': 
                 return validarNvoPassAlu(inputs, labels, modal);
 			break;
+            case 'edit-per': 
+                return validarNvoPerfil(inputs, labels, modal);
+			break;
 			}	
 	}
 					/// validar envio de mensaje
@@ -203,6 +210,23 @@ function validarTarea(inputs, labels, modal) {
 		}
 		return true;
 		}
+     /// Valida nuevo perfil
+	function validarNvoPerfil(inputs, labels, modal) {
+            var file = $('div#contenido').find('form#edit-per input#sel-img').val();
+            var extension = file.split('.').pop().toUpperCase();
+            if(file.length > 0 && (extension!="PNG" && extension!="JPG" && extension!="GIF" && extension!="JPEG")) {
+                $('div#contenido').find('div#msj').html(msjerror3+'La imagen no tiene formato válido.'+msjerror4);
+                        return false;
+            }
+
+		for (var i = 1; i < inputs.length; i++) {     
+			if (inputs[i].length == 0) {
+		    	$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
+		        return false;
+		    }
+		}
+		return true;
+		}
 	
     		/// Guarda informacion
 function guardarFormData(form) {
@@ -226,6 +250,10 @@ function guardarFormData(form) {
                     {
                	case -1:
                        $('div#contenido').find('div#msj').html(msjerror3+'Ha ocurrido un error'+msjerror4);
+                        break;
+                case 2:
+                       alertify.log('Actualización de Perfil correcta.');
+                       location.reload();
                         break;
                   default: 
                   	 

@@ -6,7 +6,7 @@ $info = explode('$', $obj->consultarProfesor());
 <!-- Modal -->
 <div class="animated fadeIn">
 <div class="modal-header gradient"><i class='fa fa-user fa-lg'></i> Editar / Actualizar Perfil</div>
-
+<form id="edit-per">
 <br>
 			        				<div class="row align-center" style="margin-bottom: 2%;">
 			        					<div class="col col-4">
@@ -69,7 +69,7 @@ $info = explode('$', $obj->consultarProfesor());
 			        				<?php
 			        					include('editor-contenido.php');
 			        				?>
-
+</form>
 	<br><br>
 	<div class="row align-right">
 				<div class="col col-2">

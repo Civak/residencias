@@ -37,6 +37,69 @@ private $conn;
 				}else echo '<div class="message error" data-component="message">La matería aún no tiene unidades, añade unidades...<span class="close small"></span></div>';	
  	   $this->conn->close();
 		}
+    
+    public function ConsultarUniTar(){
+		$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	   $grupo = explode('-', $_COOKIE['data']);
+ 	   $sql = "SELECT * FROM unidades WHERE unidades.id_grup = ".$grupo[1];
+ 	   $result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				echo $this->tareasEnt($result->num_rows, $grupo[1]);
+				}else echo '<div class="message error" data-component="message">La matería aún no tiene unidades, añade unidades...<span class="close small"></span></div>';	
+ 	   $this->conn->close();
+		}
+    
+    public function listaTareas(){
+		$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	   $sql = "SELECT * FROM tareas INNER JOIN alumnos ON tareas.noc = alumnos.noc WHERE tareas.id_act = ".$_COOKIE['tar'];
+ 	   $result = $this->conn->query($sql);
+       $alumnos = '<div id="lis-tar">';
+        $enco = false;
+        
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+			        $alumnos .= '<i class="fa fa-user"></i> <a data-component="modal" data-target="#calf-tarea" href="a-'.$row['noc'].'-'.$_COOKIE['tar'].'">'.$row['noc'].' - '.$row['nombre'].'</a><br>';
+			    }
+                $enco = true;
+			}
+        if($enco) echo $alumnos.'</div>';
+        else echo '<div class="message error" data-component="message">No hay tareas entregadas...<span class="close small"></span></div>';
+        setcookie('tar', null, -1, '/');
+ 	   $this->conn->close();
+		}
+    
+    		   /// ----------- Consulta termario con sus tareas correspondientes
+    public function tareasEnt($lim, $grupo) {
+ 	   $unidades = '<div class="temario"><div id="my-collapse" data-component="collapse">';
+ 	   
+ 	   for($unidad = 1; $unidad <= intval($lim);$unidad++) {
+ 	   	$this->conn->next_result();  	 	
+    		$sql = "SELECT * FROM actividades WHERE actividades.id_grup = ".$grupo." AND actividades.unidad = ".$unidad.";";
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				$unidades .= '<div class="header-topic"><a id=u-"'.$unidad.'" href="#box-'.$unidad.'" class="collapse-toggle">Unidad: '.$unidad.'</a></div>';
+			   $unidades .= '<div class="collapse-box hide" id="box-'.$unidad.'">'; 
+			    while($row = $result->fetch_assoc()) {
+			    	$unidades .= '<div class="row edit-tareas" id="t-'.$row['id'].'"><hr><div class="col col-9"><i class="fa fa-clipboard"></i> <a id="t-'.$row['id'].'" data-component="modal" data-target="#tareas-info">'.$row['titulo'].'</a><br>';
+			    	$unidades .= '<span class="label tag success">Fecha Asignada: '.$row['fec_ini'].'</span>&nbsp;&nbsp;&nbsp;<span class="label tag error"> Fecha Límite: '.$row['fec_lim'].'</span></div>';
+			    	$unidades .= '<div id="rev-tar" class="col col-2 offset-1"><button title="Revisar Tarea" class="button small" id="tar-'.$row['id'].'">Revisar</button></div></div>';
+			    	
+			    }
+			   $unidades .= '</div>';  
+			 }else{
+			 		$unidades .= '<div class="header-topic"><a id=u-"'.$row['unidad'].'" href="#box-'.$unidad.'" class="collapse-toggle">Unidad: '.$unidad.'</a></div>';
+			    	$unidades .= '<div class="collapse-box hide" id="box-'.$unidad.'"><br><div class="message error" data-component="message">La unidad aún no tiene tareas.<span class="close small"></span></div></div>';
+			 }
+		}
+			 
+		return $unidades.'</div>';
+    	}
 		
 			   /// ----------- Consulta termario con sus tareas correspondientes
     public function panelTareas($lim, $grupo) {
@@ -78,6 +141,25 @@ private $conn;
 			if ($result->num_rows > 0) {
 			    while($row = $result->fetch_assoc()) {
 			        $temario = array($this->obtenerArchivos($row['docs']), $row['fec_ini'], $row['fec_lim'],$row['titulo'], $row['instrucciones'], $this->consultarUnidadesTareas($row['unidad']), $row['docs']);
+			    }
+			}
+			
+		return $temario;	
+		$this->conn->close();
+		}
+    
+    public function tareaAlumno($tarea,$alumno) {
+		$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+		
+		$temario = '';
+		$sql = "CALL revisarTar(".$alumno.",".$tarea.");";
+				
+		$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+                    $temario = array($this->obtenerArchivos($row['docs']), $row['fec_ini'], $row['fec_lim'],$row['titulo'], $row['instrucciones'], $row['contenido'],$row['fec_env'],$row['observaciones'],$row['calificacion'], $this->obtenerArchivos($row['doc']));
 			    }
 			}
 			

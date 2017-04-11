@@ -21,7 +21,7 @@ $info = explode('$', $obj->consultarProfesor());
 								        		</label>
 								        		<input  type="file" id="sel-img" name="sel-img">
 											</div>
-											<img id="preview" src="./img/user.png" style="height: 100%; width: 100%; object-fit: contain" class="animated" alt="Imagen de  Perfil" />
+											<?php echo '<img id="preview" src="./img/'.$info[0].'" style="height: 100%; width: 100%; object-fit: contain" class="animated" alt="Imagen de  Perfil" />'; ?>
 			        					</div>
 			        				</div>
 			        				<br><hr>
@@ -69,6 +69,8 @@ $info = explode('$', $obj->consultarProfesor());
 			        				<?php
 			        					include('editor-contenido.php');
 			        				?>
+    <br>
+    <div id="msj"></div>
 </form>
 	<br><br>
 	<div class="row align-right">

@@ -247,6 +247,67 @@ class Editar{
 			$this->conn->close();
     	}
     
+      public function actPerPro() {
+    		$this->conn = new Conexion('../../php/datosServer.php');
+			$this->conn = $this->conn->conectar();
+			
+			if($_FILES['sel-img']["size"] != 0){
+                    $this->cargarImagenesPro('sel-img');
+				}else{
+                $tel = 0;
+                if(strlen($_POST['tel']) != 0) $tel = $_POST['tel'];
+                 $sql = "CALL actPerPro('".$_SESSION['profesor']."', '".$_POST['nom']."', '".$_POST['apep']."', '".$_POST['apem']."', '".$_POST['ema']."', '".$tel."','".$_POST['cv']."')";
+                if ($this->conn->query($sql) === TRUE) {
+                           echo 2;
+                        } else {
+                        echo -1;
+                        }
+            }
+			$this->conn->close();
+    	}
+    
+    function cargarImagenesPro($imagen)
+        {
+			// Donde se guardaran las imágenes en el server?
+            $ruta = "../profesor/img/";
+            
+              $nombreAntiguo = $_FILES[$imagen]['name'];
+              $nombre_tmp = $_FILES[$imagen]['tmp_name'];
+              $tipo = $_FILES[$imagen]['type'];
+            
+			  // Proceso de regex que evalua si son extensiones validas.
+              $ext_permitidas = array('jpg','jpeg','gif','png');
+              $partes_nombre = explode('.', $nombreAntiguo);
+              $extension = end( $partes_nombre );
+              $extension = strtolower($extension);
+              $nombre = $_SESSION['profesor'].".".$extension;
+              $ext_correcta = in_array($extension, $ext_permitidas);
+            
+              $tipo_correcto = preg_match('/^image\/(pjpeg|jpeg|gif|png)$/', $tipo);
+            
+            
+              if( $ext_correcta && $tipo_correcto){
+                if( $_FILES[$imagen]['error'] > 0 ){
+                  echo -1;
+                }else{
+            
+                    move_uploaded_file($nombre_tmp, $ruta.$nombre);
+                    chmod($ruta.$nombre, 0777);
+                     $tel = 0;
+                    if(strlen($_POST['tel']) != 0) $tel = $_POST['tel'];
+                     $sql = "UPDATE profesores SET nombre = '".$_POST['nom']."', apepat = '".$_POST['apep']."', apemat = '".$_POST['apem']."', email = '".$_POST['ema']."', telefono = '".$tel."', cv = '".$_POST['cv']."', foto = '".$nombre."'  WHERE rfc = '".$_SESSION['profesor']."'";
+                        if ($this->conn->query($sql) === TRUE) {
+                           echo 2;
+                        } else {
+                        echo -1;
+                        }
+                  
+                }
+              }else{
+                  die();
+                  echo -1;
+              }
+        }
         function cargarImagenes($imagen)
         {
 			// Donde se guardaran las imágenes en el server?
@@ -329,10 +390,10 @@ class Editar{
             $datos->eliminarAlu();
         break;
         case 'ed-alum':
-            echo $datos->actPerAlu();
+            $datos->actPerAlu();
         break;
         case 'ed-pro':
-            echo "hola";
+            $datos->actPerPro();
         break;
     }
 }

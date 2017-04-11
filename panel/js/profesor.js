@@ -265,6 +265,14 @@
 			      
 			    });
   });
+    	 /// Click en boton añadir una unidad o eliminarla
+  	$('div#contenido').on('click', 'div#rev-tar button', function (e) {
+		e.preventDefault();
+	   var tipo = $(this).attr('id');
+        var file = tipo.split('-');
+            Cookies.set('tar', file[1]);
+            $('div#contenido').load('menu/tar-alum.php');
+  });
         
     setInterval(function()
     {
@@ -573,6 +581,13 @@ function guardar(form) {
 								    location.reload();
 								});                
 					   break;
+                case 2:
+                       alertify.confirm("Perfil Actualizado existosamente...", function () {
+								    location.reload();
+								}, function() {
+								    location.reload();
+								}); 
+                        break;
                	case -1:
                        $('div#contenido').find('div#msj').html(msjerror3+'Ha ocurrido un error'+msjerror4);
                         break;
@@ -581,7 +596,7 @@ function guardar(form) {
                         break;
                   default: 
                   	  alertify.log(infoRegreso);
-                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
+                  	 $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
                   }
                	},
                   error: function () {

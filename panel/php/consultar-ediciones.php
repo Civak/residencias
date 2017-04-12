@@ -38,6 +38,48 @@ private $conn;
  	   $this->conn->close();
 		}
     
+    public function ConsultarExamenes(){
+		$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	   $grupo = explode('-', $_COOKIE['data']);
+ 	   $sql = "SELECT * FROM unidades WHERE unidades.id_grup = ".$grupo[1];
+ 	   $result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				echo $this->panelExamenes($result->num_rows, $grupo[1]);
+				}else echo '<div class="message error" data-component="message">La matería aún no tiene examenes programados.<span class="close small"></span></div>';	
+ 	   $this->conn->close();
+		}
+    
+    			   /// ----------- Consulta termario con sus tareas correspondientes
+    public function panelExamenes($lim, $grupo) {
+ 	   $unidades = '<div class="temario"><div id="my-collapse" data-component="collapse">';
+ 	   
+ 	   for($unidad = 1; $unidad <= intval($lim);$unidad++) {
+ 	   	$this->conn->next_result();  	 	
+    		$sql = "SELECT * FROM examenes WHERE examenes.id_mat = ".$grupo." AND examenes.unidad = ".$unidad." GROUP BY examenes.id;";
+			$result = $this->conn->query($sql);
+            
+			if ($result->num_rows > 0) {
+                $ex = 1;
+				$unidades .= '<div class="header-topic"><a id=u-"'.$unidad.'" href="#box-'.$unidad.'" class="collapse-toggle">Unidad: '.$unidad.'</a></div>';
+			   $unidades .= '<div class="collapse-box hide" id="box-'.$unidad.'">'; 
+			    while($row = $result->fetch_assoc()) {
+			    	$unidades .= '<div class="row edit-examen" id="t-'.$row['id'].'"><hr><div class="col col-9"><i class="fa fa-clipboard"></i> <a id="t-'.$row['id'].'" data-component="modal" data-target="#tareas-info">Examen No. '.$ex.'</a><br>';
+			    	$unidades .= '<span class="label tag success">Fecha Asignada: '.$row['fec_ini'].'</span>&nbsp;&nbsp;&nbsp;<span class="label tag error"> Fecha Límite: '.$row['fec_lim'].'</span></div>';
+			    	$unidades .= '<div class="col col-2 offset-1"><i title="Editar" id="edit-'.$row['id'].'" class="fa fa-pencil success"></i> <i title="Eliminar" id="elim-'.$row['id'].'" class="fa fa-close error"></i></div></div>';
+			    	$ex++;
+			    }
+			   $unidades .= '</div>';  
+			 }else{
+			 		$unidades .= '<div class="header-topic"><a id=u-"'.$row['unidad'].'" href="#box-'.$unidad.'" class="collapse-toggle">Unidad: '.$unidad.'</a></div>';
+			    	$unidades .= '<div class="collapse-box hide" id="box-'.$unidad.'"><br><div class="message error" data-component="message">La unidad no tiene examenes programados.<span class="close small"></span></div></div>';
+			 }
+		}
+			 
+		return $unidades.'</div>';
+    	}
+    
     public function ConsultarUniTar(){
 		$this->conn = new Conexion('../../../php/datosServer.php');
 		$this->conn = $this->conn->conectar();

@@ -221,6 +221,21 @@
 	   	break;
 	   }
   });
+
+        /// Clicks en botones de edición o eliminar examen
+	$('div#contenido').on('click', 'div.edit-examen i', function (e) {
+		e.preventDefault();
+	   var tipo = $(this).attr('id');
+		var op = tipo.split('-');
+	   switch(op[0]) {
+	   	case 'edit':
+	   		editarTarea(op[1]);	
+	   	break;
+	   	case 'elim':
+	   		eliminarExamen(op[1]);
+	   	break;
+	   }
+  });
   /// Clicks en botones de edición o eliminar tarea
 	$('div#contenido').on('click', 'div.edit-tareas a', function (e) {
 		e.preventDefault();
@@ -539,6 +554,15 @@ function eliminarTarea(cual) {
 		    
 		}); 
 	}
+/// Elimina examen en panel edición
+function eliminarExamen(cual) {
+	alertify.confirm("<i class='fa fa-warning'></i> Eliminarás el examen seleccionado, ¿deseas continuar?", function () {
+            Cookies.set('opcion', 'editar-contenido$el-ex');
+            eliminarDatos(cual, '', 'editar-contenido.php'); 
+		}, function() {
+		    
+		}); 
+	}
 /// Elimina tarea en panel edición
 function eliminarDocs(cual) {
 	alertify.confirm("<i class='fa fa-warning'></i> Eliminarás el documento seleccionado, ¿deseas continuar?", function () {
@@ -726,6 +750,10 @@ function guardar(form) {
                   		break;
 						case 3:
 								$('div#contenido').find('div#bandeja-env div#'+dato1).remove();
+                  		break;
+                        case 4:
+                			alertify.log('Examen eliminado correctamente.');
+                  	  		$('div#contenido').find('div#t-'+dato1).remove();
                   		break;
                 		}
                 	}

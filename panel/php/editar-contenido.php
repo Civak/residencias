@@ -46,6 +46,20 @@ class Editar{
 			}
     	$this->conn->close();
     	}
+    
+    	   /// ----------- Elimina examen
+    public function eliminarExamen() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	 	
+    		$sql = "DELETE FROM examenes WHERE examenes.id = ".$_POST['dato1'];
+			if ($this->conn->query($sql) === TRUE) {
+			    echo 4;
+			} else {
+			    echo -1;
+			}
+    	$this->conn->close();
+    	}
     	
     		   /// ----------- Elimina tarea
     public function eliminarDocs() {
@@ -411,6 +425,9 @@ class Editar{
         break;
         case 'cal-tar':
             $datos->calTarea();
+        break;
+        case 'el-ex':
+            $datos->eliminarExamen();
         break;
     }
 }

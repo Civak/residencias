@@ -190,6 +190,104 @@ private $conn;
 		$this->conn->close();
 		}
     
+    public function contarPreguntas($dato){
+        $this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+        $sql = "SELECT * FROM examenes WHERE examenes.id = ".$dato.";";
+				
+		$result = $this->conn->query($sql);
+        if ($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                return array($row['fec_ini'], $row['fec_lim'],$row['unidad'],$result->num_rows);
+                break;
+            }
+        } 
+
+        $this->conn->close();
+        return 0;
+    }
+    
+    public function comboUnidad($unidad) {
+    	$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+		$datos = explode('-', $_COOKIE['data']); 
+
+ 	   $cat = '<label>Unidad</label>
+								<select id="unidades-tareas" name="unidades-tareas"><option value="">-- Selecciona --</option>'; 	
+ 	   $encontrado = false; 	
+    		$sql = "SELECT * FROM unidades WHERE unidades.id_grup = ".$datos[1]."";
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+                    if(strcmp($row['unidad'],$unidad) == 0) $cat .= '<option value="'.$row['unidad'].'" selected>Unidad '.$row['unidad'].'</opcion>';
+			       else $cat .= '<option value="'.$row['unidad'].'">Unidad '.$row['unidad'].'</opcion>';
+			    }
+			   $encontrado = true;
+			} 
+			
+			if($encontrado) echo $cat.'</select><br>';
+			else echo '<div class="message error" data-component="message">La matería aún no tiene unidades, añade unidades...<span class="close small"></span></div>';
+    	$this->conn->close();
+    	}
+    
+    public function editarExamen($dato) {
+		$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+		
+		$sql = "SELECT * FROM examenes WHERE examenes.id = ".$dato.";";
+				
+		$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+			        echo $this->crearPregunta($row['descripcion'],$row['pregunta']);
+			    }
+			}
+	
+		$this->conn->close();
+		}
+    
+    public function crearPregunta($des, $p){
+        $lista = '';
+        $op = explode('@',$des);
+        
+                $lista .= '<div class="col col-5">
+                <br><input type="text" value="'.$op[0].'" name="p-'.$p.'"><br>
+                <div class="row">
+                    <div class="col col-1"><br>
+                    <div class="form-item">';
+                        switch(intval($op[1])){
+                            case 1:
+                                $lista .= '<label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="1" checked></label><br>
+                                    <label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="2"></label><br>
+                                    <label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="3"></label>';
+                                break;
+                             case 2:
+                                $lista .= '<label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="1"></label><br>
+                                    <label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="2" checked></label><br>
+                                    <label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="3"></label>';
+                                break;
+                             case 3:
+                                $lista .= '<label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="1"></label><br>
+                                    <label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="2"></label><br>
+                                    <label class="checkbox"><input type="radio" name="p-'.$p.'-r" value="3" checked></label>';
+                                break;
+                        }
+                        
+                            
+                    $lista .= '</div></div>
+                    <div class="col col-11">Respuestas:
+                        <input type="text" value="'.$op[2].'" name="p-'.$p.'-a">
+                        <input type="text" value="'.$op[3].'" name="p-'.$p.'-b">
+                        <input type="text" value="'.$op[4].'" name="p-'.$p.'-c">
+                    </div>
+                </div>
+            </div>';
+        
+        return $lista;
+    }
+    
     public function tareaAlumno($tarea,$alumno) {
 		$this->conn = new Conexion('../../../php/datosServer.php');
 		$this->conn = $this->conn->conectar();

@@ -1,7 +1,7 @@
 <?php
     for($i = 1; $i <= intval($_COOKIE['preguntas']);$i++){
         echo '<div class="col col-5">
-    <br><input type="text" placeholder="Pregunta '.$i.'" name="p-'.$i.'"><input type="text" class="w25" placeholder="Valor" name="v-'.$i.'"><br>
+    <br><input type="text" placeholder="Pregunta '.$i.'" name="p-'.$i.'"><br>
     <div class="row">
         <div class="col col-1"><br>
         <div class="form-item">

@@ -106,6 +106,10 @@
                 formData.append("obs", $('div#contenido').find("form#"+form+" textarea#obser").html());
 				guardar(formData);
 			break;
+            /*case 'editar-examen':
+                Cookies.set('opcion','editar-contenido$ed-ex');
+				guardarFormData($('div#contenido').find("form#"+form)[0]);
+            break;*/
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
 			}
 		
@@ -229,7 +233,7 @@
 		var op = tipo.split('-');
 	   switch(op[0]) {
 	   	case 'edit':
-	   		editarTarea(op[1]);	
+	   		editarExamen(op[1]);	
 	   	break;
 	   	case 'elim':
 	   		eliminarExamen(op[1]);
@@ -375,7 +379,8 @@
             case 'cal-tar': 
                 return validarRevTarea(inputs, labels);
 			break;
-            case 'crear-examen': 
+            case 'crear-examen':
+            case 'editar-examen': 
                 return validarExamen(inputs, labels);
 			break;
 			}	
@@ -577,6 +582,12 @@ function editarTarea(op) {
 	Cookies.set('opcion','editar-contenido$ed-ta-p');
 	Cookies.set('data', Cookies.get('data')+'-'+op);
 	$('div#contenido').load('menu/ed-ta-p.php');
+	}
+/// Editar examen
+function editarExamen(op) {
+	Cookies.set('opcion','editar-contenido$ed-ex-p');
+	Cookies.set('data', Cookies.get('data')+'-'+op);
+	$('div#contenido').load('menu/ed-ex-p.php');
 	}
 		/// Guarda informacion
 function guardarFormData(form) {

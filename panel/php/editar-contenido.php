@@ -60,6 +60,43 @@ class Editar{
 			}
     	$this->conn->close();
     	}
+    
+     	   /// ----------- Elimina examen
+    public function editarExamen() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	 	$id = explode('-',$_COOKIE['data']);
+        
+    		$sql = "DELETE FROM examenes WHERE examenes.id = ".$id[2];
+			if ($this->conn->query($sql) === TRUE) {
+			    $this->guardarExamen($id[1],$id[3]);
+			} else {
+			    echo -1;
+			}
+    	$this->conn->close();
+    	}
+    
+    public function guardarExamen($grupo,$preguntas) {
+            $des = $_POST['p-1'].'@'.$_POST['p-1-r'].'@'.$_POST['p-1-a'].'@'.$_POST['p-1-b'].'@'.$_POST['p-1-c'];
+        
+			$sql = "INSERT INTO examenes (pregunta, id_mat,unidad, fec_ini, fec_lim, descripcion, respuesta, tipo) VALUES (1,".$grupo.",".$_POST['unidades-tareas'].",'".$_POST['fec-ini']."', '".$_POST['fec-lim']."' ,'".$des."','".$_POST['p-1-r']."','O');";
+            $this->conn->query($sql);
+            $id = $this->conn->insert_id;
+			
+            $sql = '';
+            for($i = 2; $i <= intval($preguntas);$i++){
+                $des = $_POST['p-'.$i].'@'.$_POST['p-'.$i.'-r'].'@'.$_POST['p-'.$i.'-a'].'@'.$_POST['p-'.$i.'-b'].'@'.$_POST['p-'.$i.'-c'];
+                
+                $sql .= "CALL insertarPregunta(".$grupo.",".$_POST['unidades-tareas'].",'".$_POST['fec-ini']."', '".$_POST['fec-lim']."' ,'".$des."','".$_POST['p-'.$i.'-r']."',".$i.",".$id.");";
+            }    
+        
+            if ($this->conn->multi_query($sql) === TRUE) {
+					    echo "Examen guardado correctamente...";
+					} else {
+					    echo -1;
+					}
+            setcookie('preguntas', null, -1, '/');
+			}
     	
     		   /// ----------- Elimina tarea
     public function eliminarDocs() {
@@ -428,6 +465,9 @@ class Editar{
         break;
         case 'el-ex':
             $datos->eliminarExamen();
+        break;
+        case 'ed-ex-p':
+            $datos->editarExamen();
         break;
     }
 }

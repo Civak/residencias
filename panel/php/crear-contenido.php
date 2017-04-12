@@ -179,6 +179,32 @@ class Contenido{
 					}
 			$this->conn->close();
 			}
+    
+    public function guardarExamen() {
+			$this->conn = new Conexion('../../php/datosServer.php');
+			$this->conn = $this->conn->conectar();
+            $grupo = explode('-',$_COOKIE['data']);
+            $des = $_POST['p-1'].'@'.$_POST['p-1-r'].'@'.$_POST['p-1-a'].'@'.$_POST['p-1-b'].'@'.$_POST['p-1-c'];
+        
+			$sql = "INSERT INTO examenes (pregunta, id_mat,unidad, fec_ini, fec_lim, descripcion, respuesta, tipo) VALUES (1,".$grupo[1].",".$_POST['unidades-tareas'].",'".$_POST['fec-ini']."', '".$_POST['fec-lim']."' ,'".$des."','".$_POST['p-1-r']."','O');";
+            $this->conn->query($sql);
+            $id = $this->conn->insert_id;
+			
+            $sql = '';
+            for($i = 2; $i <= intval($_COOKIE['preguntas']);$i++){
+                $des = $_POST['p-'.$i].'@'.$_POST['p-'.$i.'-r'].'@'.$_POST['p-'.$i.'-a'].'@'.$_POST['p-'.$i.'-b'].'@'.$_POST['p-'.$i.'-c'];
+                
+                $sql .= "CALL insertarPregunta(".$grupo[1].",".$_POST['unidades-tareas'].",'".$_POST['fec-ini']."', '".$_POST['fec-lim']."' ,'".$des."','".$_POST['p-'.$i.'-r']."',".$i.",".$id.");";
+            }    
+        
+            if ($this->conn->multi_query($sql) === TRUE) {
+					    echo "Examen guardado correctamente...";
+					} else {
+					    echo -1;
+					}
+            setcookie('preguntas', null, -1, '/');
+			$this->conn->close();
+			}
 }
 
 /// Se utiliza cookie para swicheo
@@ -203,6 +229,9 @@ class Contenido{
         break;
         case 're-pe':
             $datos->subirTareaAlumno();
+        break;
+        case 'cr-ex':
+            $datos->guardarExamen();
         break;
     }
 }

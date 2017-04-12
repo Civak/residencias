@@ -159,7 +159,7 @@ private $conn;
 
 			if ($result->num_rows > 0) {
 			    while($row = $result->fetch_assoc()) {
-                    $temario = array($this->obtenerArchivos($row['docs']), $row['fec_ini'], $row['fec_lim'],$row['titulo'], $row['instrucciones'], $row['contenido'],$row['fec_env'],$row['observaciones'],$row['calificacion'], $this->obtenerArchivos($row['doc']));
+                    $temario = array($this->obtenerArchivos($row['docs']), $row['fec_ini'], $row['fec_lim'],$row['titulo'], $row['instrucciones'], $row['contenido'],$row['fec_env'],$row['observaciones'],$row['calificacion'], $this->obtenerArchivosAlum($row['doc']));
 			    }
 			}
 			
@@ -175,6 +175,7 @@ private $conn;
     		
     		return $docs.'</div>';
     	}
+
     	
     		public function consultarUnidadesTareas($uni) {
     	$this->conn = new Conexion('../../../php/datosServer.php');

@@ -40,7 +40,7 @@
 	$('div#contenido').on('click', 'button#guardar', function (e) {
 	e.preventDefault();
 	var form = $(this).closest('form').attr('id');
-	//console.log(form+' msj');
+	console.log(form+' msj');
 	if (evaluarModal(form)) {
 		switch(form) {
 			case 'rellenar-unidad':
@@ -98,6 +98,12 @@
                 Cookies.set('opcion', 'editar-contenido$ed-pro');
 				var formData = new FormData($('div#contenido').find("form#"+form)[0]);
 				formData.append("cv", $('div#contenido').find("form#"+form+" div#editor").html());
+				guardar(formData);
+			break;
+            case 'cal-tar':
+                Cookies.set('opcion', 'editar-contenido$cal-tar');
+				var formData = new FormData($('div#contenido').find("form#"+form)[0]);
+                formData.append("obs", $('div#contenido').find("form#"+form+" textarea#obser").html());
 				guardar(formData);
 			break;
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
@@ -165,12 +171,17 @@
 	/// Clicks en botones tipo pregunta examen
 	$('div#contenido').on('click', 'button#op-mul', function (e) {
 		e.preventDefault();
-	   var tipo = $(this).attr('id');
-	   switch(tipo) {
-	   	case 'op-mul':
-	   				$('div#contenido').find("form#crear-examen div#preguntas").append(opcionMultiple());
-	   	break;
-	   }
+        alertify.prompt('Escribe el total de Preguntas...',
+			    function (val, ev) {
+			      ev.preventDefault();
+					if (!$.isNumeric(val)) alertify.alert('Debe ser un valor númerico.'); 
+					else {
+						Cookies.set('preguntas', val);
+						$('div#contenido').find('div#preguntas').load('menu/ne-pr.php')
+					}
+			    }, function(ev) {
+			      ev.preventDefault();
+			    });
   });
   /// Click en boton añadir una unidad o eliminarla
   	$('div#contenido').on('click', 'button#add-uni, button#elim-uni', function (e) {
@@ -346,6 +357,12 @@
             case 'edit-per': 
                 return validarNvoPerfil(inputs, labels, modal);
 			break;
+            case 'cal-tar': 
+                return validarRevTarea(inputs, labels);
+			break;
+            case 'crear-examen': 
+                return validarExamen(inputs, labels);
+			break;
 			}	
 	}
 	
@@ -363,6 +380,16 @@ function validarContenidoUnidad(inputs, labels, modal) {
 		for (var i = 0; i < inputs.length; i++) {     
 			if (inputs[i].length < 4) {
 		    	$('div#contenido').find('div#msj').html(msjerror3+'Escribe una contraseña de al menos 4 caracteres.'+msjerror4);
+		        return false;
+		    }
+		}
+		return true;
+		}
+                   /// Valida nuevo pass
+	function validarExamen(inputs, labels, modal) {
+		for (var i = 0; i < inputs.length; i++) {     
+			if (inputs[i].length == 0) {
+		    	$('div#contenido').find('div#msj').html(msjerror3+'Algún campo está vacio, verifica.'+msjerror4);
 		        return false;
 		    }
 		}
@@ -398,6 +425,16 @@ function validarTarea(inputs, labels, modal, names) {
 							$('div#contenido').find('div#msj').html(msjerror3+'Debes crear contenido antes de guardar.'+msjerror4);
 								return false;
 						}
+		return true;
+	}
+			/// validar creación de tarea
+function validarRevTarea(inputs, labels) {
+			for (var i = 0; i < inputs.length; i++){
+				if (!$.isNumeric(inputs[i]) || inputs[i].length > 3) {
+				$('div#contenido').find('div#msj').html(msjerror3+'La calificación no tiene formato válido'+msjerror4);
+				return false;
+				}
+			}
 		return true;
 	}
 				/// validar creación de tarea
@@ -487,7 +524,7 @@ function validarAlumnos(inputs, labels, modal) {
 			pregunta += '<div id="preg-'+Cookies.get('preg')+'" class="col col-3"><div class="form-item form-checkboxes small">' + prompt('Escribe la pregunta...', '')+'<input placeholder="Valor" name="v-'+Cookies.get('preg')+'" type="text" class="small w25"><br>';
 			
 			for (var i = 1; i <= parseInt(resp); i++) {
-					pregunta += '<label class="checkbox"><input type="radio" class="small" name=p-"'+Cookies.get('preg')+'"> '+prompt('Escribe la respuesta No. '+i,'')+'</label>';
+					pregunta += '<label class="checkbox"><input type="radio" class="small" name="p-'+Cookies.get('preg')+'"> '+prompt('Escribe la respuesta No. '+i,'')+'</label>';
 			    }
 			    return pregunta += '<br><i id="ep-'+Cookies.get('preg')+'" class="fa fa-close fa-lg elim-preg error"></i></div></div>';
 			}
@@ -534,7 +571,7 @@ function guardarFormData(form) {
                 //¿que hace antes de enviar?
                 },
                 success: function (infoRegreso) {
-                	//console.log(infoRegreso);
+                	console.log(infoRegreso);
                     switch(parseInt(infoRegreso))
                     {
                	case -1:
@@ -588,6 +625,9 @@ function guardar(form) {
 								    location.reload();
 								}); 
                         break;
+                case 3:
+                       alertify.log("Tarea calificada correctamente...");
+                        break;
                	case -1:
                        $('div#contenido').find('div#msj').html(msjerror3+'Ha ocurrido un error'+msjerror4);
                         break;
@@ -603,6 +643,26 @@ function guardar(form) {
                      alertify.error("Ups... ha ocurrido un error, intenta nuevamente.");
                   }
             });
+		}
+        
+        function guardarExamen(){
+			var array = JSON.stringify($("div#contenido").find('form#crear-examen').serializeArray());
+			var examen = $("div#contenido").find('div#preguntas').html();
+			$.ajax({ 
+                url: '../php/crear-contenido.php',
+                type: 'post',
+                data: array,
+                async: false,
+		          cache: false,
+		          contentType: false,
+		          processData: false,
+                success: function (infoRegreso) {
+                	console.log(examen);
+                	},
+                  error: function () {
+                     alertify.error('<i class="fa fa-warning fa-lg"></i> Ups... ha ocurrido un error, intenta nuevamente.');
+                  }
+            });		
 		}
   // ---- Funcion para enviar uno o dos datos.
 	function guardarDatos(dato1, dato2, file) {

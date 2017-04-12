@@ -52,6 +52,7 @@ class Profesor{
 											        <li id="re-cal"><a href=""><i class="fa fa-bar-chart"></i> Calificaciones</a></li>
 													  <li id="re-ta"><a href=""><i class="fa fa-archive"></i> Tareas</a></li>
 													  <li id="re-te"><a href=""><i class="fa fa-file-text-o"></i> Temario</a></li>
+                                                     <!-- <li id="re-al"><a href=""><i class="fa fa-user"></i> Listar Alumnos</a></li> -->
 											    </ul>
 											</div>
 											<div class="dropdown hide" id="ed-'.$row['id'].'">

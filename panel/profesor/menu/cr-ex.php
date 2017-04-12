@@ -10,14 +10,14 @@
 						      <br><br>
 									<div class="form-item">
 							        <label>Fecha/Hora de Inicio</label>
-							        <input id="fecha" type="text">
+							        <input id="fecha" name="fec-ini" type="text">
 							    </div>
 								</div>
 								<div class="col col-3">
 								<br><br>
 									<div class="form-item">
 							        <label>Fecha/Hora Límite</label>
-							        <input id="fecha" type="text">
+							        <input id="fecha" name="fec-lim" type="text">
 							    </div>
 								</div>
 								<div class="col col-3">
@@ -48,19 +48,14 @@
 									</div>
 									<div class="col col-2">
 											<div class="form-item">
-										    <button class="button small" id="c"> Pregunta abierta</button>
-										    </div>
-									</div>
-									<div class="col col-2">
-									<div class="form-item">
-										    <button class="button small" id="c"> Archivo</button>
+										    <button class="button small" id="c"> Columnas</button>
 										    </div>
 									</div>
 									</div>								
 								<hr>
-								<div id="preguntas" class="row" style="margin: 2%;">							
+								<div id="preguntas" class="row gutters align-center">
+  
 								</div>
-								
 								<hr>
 							<div id="msj"></div>						    
 						    <br><br><br>

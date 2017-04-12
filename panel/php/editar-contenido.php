@@ -266,6 +266,20 @@ class Editar{
 			$this->conn->close();
     	}
     
+     public function calTarea() {
+    		$this->conn = new Conexion('../../php/datosServer.php');
+			$this->conn = $this->conn->conectar();
+			$datos = explode('-',$_COOKIE['tar']);
+
+                 $sql = "UPDATE tareas SET tareas.observaciones = '".$_POST['obs']."', tareas.calificacion =".$_POST['calif']." WHERE tareas.id_act = ".$datos[2]." AND tareas.noc =".$datos[1];
+                if ($this->conn->query($sql) === TRUE) {
+                           echo 3;
+                        } else {
+                        echo -1;
+                        }
+			$this->conn->close();
+    	}
+    
     function cargarImagenesPro($imagen)
         {
 			// Donde se guardaran las imágenes en el server?
@@ -394,6 +408,9 @@ class Editar{
         break;
         case 'ed-pro':
             $datos->actPerPro();
+        break;
+        case 'cal-tar':
+            $datos->calTarea();
         break;
     }
 }

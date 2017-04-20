@@ -110,13 +110,27 @@
                 Cookies.set('opcion','editar-contenido$ed-ex');
 				guardarFormData($('div#contenido').find("form#"+form)[0]);
             break;*/
+            case 'foro':
+				var formData = new FormData();
+				formData.append("tema", $('div#contenido').find("form#"+form+" div#editor").html());
+				guardar(formData);
+			break;
 			default: guardarFormData($('div#contenido').find("form#"+form)[0]);
 			}
 		
 		
 	}
 });
-	
+	/// Clicks en opciones del panel izquierdo
+	/*$('ul.groups').on('click', 'li', function (e) {
+		e.preventDefault();
+	   var file = $(this).attr('id');
+        if(file == 'foro'){
+            Cookies.set('opcion', 'crear-contenido$'+file);
+		    Cookies.set('data', $(this).attr('class'));
+		    $('div#contenido').load('menu/foro.php');
+        }
+	});*/
 	/// Clicks en opciones del panel izquierdo
 	$('div#acciones').on('click', 'li', function (e) {
 		e.preventDefault();
@@ -383,6 +397,9 @@
             case 'editar-examen': 
                 return validarExamen(inputs, labels);
 			break;
+            case 'foro': 
+                return validarTema(inputs, labels, modal);
+			break;
 			}	
 	}
 	
@@ -391,6 +408,15 @@ function validarContenidoUnidad(inputs, labels, modal) {
 			var contenido = $('div#contenido').find("form#"+modal+" div#editor").html();
 						if (contenido.length == 0){
 							$('div#contenido').find('div#msj').html(msjerror3+'Debes crear contenido antes de guardar.'+msjerror4);
+								return false;
+						}
+		return true;
+	}
+		/// validar tema de foro
+function validarTema(inputs, labels, modal) {
+			var contenido = $('div#contenido').find("form#"+modal+" div#editor").html();
+						if (contenido.length == 0){
+							$('div#contenido').find('div#msj').html(msjerror3+'Debes crear tema antes de guardar.'+msjerror4);
 								return false;
 						}
 		return true;

@@ -24,13 +24,14 @@ class Profesor{
 								        </a>    </li>
 								   
 								        <ul id="groups-'.$row['id'].'" class="hide groups">
-											<li id="" data-component="dropdown" data-target="#co-'.$row['id'].'">
+											<li data-component="dropdown" data-target="#co-'.$row['id'].'">
 											<i class="fa fa-briefcase"></i> Crear Contenido</li>
 											<li data-component="dropdown" data-target="#re-'.$row['id'].'">
 											<i class="fa fa-check-square"></i> Revisar Curso</li>
 											<li data-component="dropdown" data-target="#ed-'.$row['id'].'">
 											<i class="fa fa-edit"></i> Editar Contenido</li>
-											<li id="fo"><i class="fa fa-comments-o"></i> Foro</li>
+											<li data-component="dropdown" data-target="#fo-'.$row['id'].'">
+                                            <i class="fa fa-comments-o"></i> Foro</li>
 								        </ul>
 								        </ul>
 								        <div id="acciones">
@@ -64,6 +65,13 @@ class Profesor{
 													  <li id="ed-do"><a href=""><i class="fa fa-reply"></i> Editar Documentos</a></li>
 													  <li id="ed-al"><a href=""><i class="fa fa-user-times"></i> Editar Alumnos</a></li>
 													  <li id="ed-gr"><a href=""><i class="fa fa-warning"></i> Dejar Grupo</a></li>
+											    </ul>
+											</div>
+                                            <div class="dropdown hide" id="fo-'.$row['id'].'">
+											    <a href="" class="close show-sm"></a>
+											    <ul id="crear-contenido">
+											        <li id="foro"><a href=""><i class="fa fa-list-alt"></i> Crear Tema</a></li>
+													  <li id="ve-fo"><a href=""><i class="fa fa-pencil"></i> Ver Foro</a></li>
 											    </ul>
 											</div>
 											</span></div></div>';

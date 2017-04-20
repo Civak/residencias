@@ -20,6 +20,19 @@ class Contenido{
 			}
     	$this->conn->close();
     	}
+    
+    public function guardarTema() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	   $op = explode('-', $_COOKIE['data']);  	 	
+    		$sql = "INSERT INTO foro(id_gru, contenido, fecha) VALUES(".$op[1].", '".$_POST['tema']."',CURRENT_TIMESTAMP);";
+			if ($this->conn->query($sql) === TRUE) {
+			    echo 'Tema para Foro guardado exitosamente...';
+			} else {
+			    echo -1;
+			}
+    	$this->conn->close();
+    	}
     	
     	public function guardarTarea() {
     		$this->conn = new Conexion('../../php/datosServer.php');
@@ -232,6 +245,9 @@ class Contenido{
         break;
         case 'cr-ex':
             $datos->guardarExamen();
+        break;
+        case 'foro':
+            $datos->guardarTema();
         break;
     }
 }

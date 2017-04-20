@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-04-2017 a las 06:07:11
+-- Tiempo de generación: 13-04-2017 a las 06:04:40
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.6
 
@@ -352,8 +352,12 @@ CREATE TABLE `examenes` (
 --
 
 INSERT INTO `examenes` (`id`, `pregunta`, `id_mat`, `unidad`, `fec_ini`, `fec_lim`, `descripcion`, `respuesta`, `tipo`) VALUES
-(7, 1, 11, 1, '2017-04-14 20:25:00', '2017-04-14 20:25:00', 'De que color es el caballo blanco de napoleón@3@Verde@café@blanco', '3', 'O'),
-(7, 2, 11, 1, '2017-04-14 20:25:00', '2017-04-14 20:25:00', 'Capital de ciudad de méxico@1@ciudad de mexico@toluca@DF', '1', 'O');
+(8, 1, 11, 1, '2017-04-12 13:06:00', '2017-04-17 13:06:00', 'Pregunta @1@A@B@C', '1', 'O'),
+(8, 2, 11, 1, '2017-04-12 13:06:00', '2017-04-17 13:06:00', 'Pregunta 2@2@10@20@30', '2', 'O'),
+(8, 3, 11, 1, '2017-04-12 13:06:00', '2017-04-17 13:06:00', 'Pregunta 3@3@Rojo @Azul@Verde', '3', 'O'),
+(8, 4, 11, 1, '2017-04-12 13:06:00', '2017-04-17 13:06:00', 'Pregunta 4@1@100@200@300', '1', 'O'),
+(12, 1, 11, 1, '2017-04-14 20:25:00', '2017-04-16 20:25:00', 'De que color es el caballo blanco de Napoleón@2@Rojo@café@blanco', '2', 'O'),
+(12, 2, 11, 1, '2017-04-14 20:25:00', '2017-04-16 20:25:00', 'Capital de ciudad de México@1@ciudad de mexico@toluca@Distrito Federal', '1', 'O');
 
 --
 -- Disparadores `examenes`
@@ -674,7 +678,7 @@ INSERT INTO `unidades` (`id_grup`, `unidad`, `contenido`, `docs`) VALUES
 (10, 2, NULL, NULL),
 (10, 3, NULL, NULL),
 (10, 4, NULL, NULL),
-(11, 1, '<div>Unidad 1</div><ol><li>Cálculo Diferencial&nbsp;</li><li>Fundamentos de Programación</li><li>Taller de Ética</li><li>Matemáticas Discretas</li><li>Taller de Administración</li><li>Fundamentos de Investigación</li></ol>\r\n		', NULL),
+(11, 1, '<div>Unidad 1</div><ol><li>Cálculo Diferencial&nbsp;</li><li>Fundamentos de Programación</li><li>Taller de Ética</li><li>Matemáticas Discretas</li><li>Taller de Administración</li><li>Fundamentos de Investigación</li></ol>\r\n		', '233_11_1_descarga.png;'),
 (11, 2, 'Unidad 2<br><ol><li>Cálculo Integral</li><li>Programación Orientada a Objetos</li><li>Contabilidad Financiera</li><li>Química</li><li>Álgebra Lineal</li><li>Probabilidad y Estadística</li></ol><br>', NULL),
 (11, 3, NULL, NULL);
 
@@ -804,7 +808,7 @@ ALTER TABLE `alum_msj`
 -- AUTO_INCREMENT de la tabla `examenes`
 --
 ALTER TABLE `examenes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT de la tabla `foro`
 --

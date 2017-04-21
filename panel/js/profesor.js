@@ -40,7 +40,7 @@
 	$('div#contenido').on('click', 'button#guardar', function (e) {
 	e.preventDefault();
 	var form = $(this).closest('form').attr('id');
-	console.log(form+' msj');
+	//console.log(form+' msj');
 	if (evaluarModal(form)) {
 		switch(form) {
 			case 'rellenar-unidad':

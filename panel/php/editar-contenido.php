@@ -60,7 +60,19 @@ class Editar{
 			}
     	$this->conn->close();
     	}
-    
+      	   /// ----------- Elimina examen
+    public function eliminarPost() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	 	
+    		$sql = "DELETE FROM foro WHERE foro.id = ".$_POST['dato1'];
+			if ($this->conn->query($sql) === TRUE) {
+			    echo 1;
+			} else {
+			    echo -1;
+			}
+    	$this->conn->close();
+    	}
      	   /// ----------- Elimina examen
     public function editarExamen() {
     	$this->conn = new Conexion('../../php/datosServer.php');
@@ -468,6 +480,9 @@ class Editar{
         break;
         case 'ed-ex-p':
             $datos->editarExamen();
+        break;
+        case 'el-pu':
+            $datos->eliminarPost();
         break;
     }
 }

@@ -33,6 +33,19 @@ class Contenido{
 			}
     	$this->conn->close();
     	}
+    
+    public function guardarComentario($cual) {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+  	 	
+    		$sql = "INSERT INTO foro_msj(id_foro, user, msj, fecha) VALUES(".$_POST['id'].",'".$_SESSION['profesor']."', '".$_POST['com']."',CURRENT_TIMESTAMP);";
+			if ($this->conn->query($sql) === TRUE) {
+			    echo $cual;
+			} else {
+			    echo -1;
+			}
+    	$this->conn->close();
+    	}
     	
     	public function guardarTarea() {
     		$this->conn = new Conexion('../../php/datosServer.php');
@@ -248,6 +261,12 @@ class Contenido{
         break;
         case 'foro':
             $datos->guardarTema();
+        break;
+        case 'en-co':
+            $datos->guardarComentario(1);
+        break;
+        case 'en-coo':
+            $datos->guardarComentario(2);
         break;
     }
 }

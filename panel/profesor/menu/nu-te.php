@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div id="foro">
 <div class="animated fadeIn">
-<div class="modal-header gradient"><i class='fa fa-list-alt fa-lg'></i> Foro del Grupo: <span class="label focus">
+<div class="modal-header gradient"><i class='fa fa-list-alt fa-lg'></i> Foro2 del Grupo: <span class="label focus">
 	<?php $datos = explode('-', $_COOKIE['data']); echo $datos[0]; ?>
 </span></div><br><hr>
     <div class="row align-center">
@@ -9,7 +9,7 @@
         <?php
             include('../../php/foro.php');
             $obj = new Foro();
-            $cont = $obj->Temas(); 
+            $cont = $obj->Tema(); 
             if(intval($cont) != -1){
                 echo $cont;
             }else{
@@ -21,6 +21,7 @@
 
     <?php
         if(intval($cont) != -1) include('editor-com.php');
+        //setcookie('tema', null, -1, '/');
     ?>
 
 <br><hr>
@@ -44,7 +45,7 @@
 </div>
 <script>
     $(document).ready(function(){
-         $('div#contenido').on('click', 'div.label', function (e) {
+        $('div#contenido').on('click', 'div.label', function (e) {
 	       e.preventDefault();
             var id = $(this).attr('id').split('-');
             alertify.confirm("<i class='fa fa-warning'></i> Eliminarás el post seleccionado, ¿deseas continuar?", function () {
@@ -54,6 +55,7 @@
 		    
 		});
         });
+        
          $('div#publicaciones').on('click', 'a', function (e) {
 	       e.preventDefault();
             var id = $(this).attr('href').split('-');
@@ -61,12 +63,13 @@
              $('div#contenido').find('div#foro').remove();
              $('div#contenido').load('menu/nu-te.php');
         });
-        
+        /*
         $('div#contenido').on('click', 'button#gua-com', function (e) {
+            
 	       e.preventDefault();
             var cont = $('div#contenido').find("div#editor").html();
             if(cont != ''){
-                Cookies.set('opcion','crear-contenido$en-co');
+                Cookies.set('opcion','crear-contenido$en-coo');
                 var formData = new FormData();
 				formData.append("com", cont);
                 formData.append("id", Cookies.get('tema'));
@@ -90,9 +93,10 @@
                 //¿que hace antes de enviar?
                 },
                 success: function (infoRegreso) {
+                    console.log(infoRegreso);
                     switch(parseInt(infoRegreso))
                     {
-                  case 1:
+                   case 2:
                     $('div#contenido').find('div#foro').remove();
                     $('div#contenido').load('menu/nu-te.php');
 					   break;
@@ -105,10 +109,8 @@
                      alertify.error("Ups... ha ocurrido un error, intenta nuevamente.");
                   }
             });
-		}
-        
-        		 // ---- Funcion para enviar uno o dos datos.
-	function eliminarDatos(dato1, dato2, file) {
+		}*/
+        function eliminarDatos(dato1, dato2, file) {
 		
 		$.ajax({ 
 				data: {'dato1': dato1, 'dato2': dato2},

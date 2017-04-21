@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-04-2017 a las 06:04:40
+-- Tiempo de generación: 21-04-2017 a las 04:46:30
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.6
 
@@ -389,11 +389,20 @@ CREATE TABLE `exam_alum` (
 
 CREATE TABLE `foro` (
   `id` int(11) NOT NULL,
-  `rfc` varchar(13) COLLATE utf8_spanish_ci NOT NULL,
-  `docs` varchar(128) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `id_gru` int(11) NOT NULL,
   `contenido` text COLLATE utf8_spanish_ci NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `foro`
+--
+
+INSERT INTO `foro` (`id`, `id_gru`, `contenido`, `fecha`) VALUES
+(2, 11, '<ol><li>Concepto de ordenador como autómata.</li><li>Concepto de lenguaje máquina: datos e instrucciones.</li><li>Concepto de lenguajes de alto y bajo nivel.</li><li>Concepto de intérprete y lenguaje interpretado.</li><li>Concepto de máquina virtual.</li><li>Concepto de compilador y lenguaje compilado.</li><li>Concepto de entorno de ejecución (runtime)</li><li>Complejidad del problema: necesidad de la Ingeniería del Software.</li></ol>', '2017-04-20 21:35:29'),
+(3, 11, '<ol><li>Programa principal: Hola,Mundo.</li><li>Uso del encabezado de main(). Variantes.</li><li>Inclusión de archivos. Las bibliotecas estándar.</li><li>Programas con más de un archivo: la pareja .h/.c.</li><li>Espacio de nombres en programas con más de un archivo.</li><li>.o, .h y .a : uso de bibliotecas</li></ol>', '2017-04-20 21:35:58'),
+(5, 11, '<ol><li>Concepto de tipo de datos.</li><li>Concepto de variable: nombre, dirección, longitud, tipo.</li><li>Concepto de tipo predefinido.</li><li>Concepto de tipo definido por el usuario.</li><li>Concepto de tipo de referencia.</li><li>Concepto de declaración de variables, y de comprobación estricta de tipos.</li><li>Concepto de compatibilidad de tipos.</li><li>Concepto de refundición de tipos.</li><li>Concepto de ámbito de una variable: local, global.</li><li>Concepto de duración de una variable: automática, estática.</li><li>Taxonomía de tipos de datos según su composición.</li></ol>', '2017-04-20 21:37:42'),
+(6, 11, 'Tipos de Datos Numéricos.\r\n<br>Tipos de datos enteros. Alcances. El problema del desbordamiento.\r\n<br>Tipos de datos de coma flotante. Alcances y precisiones. El problema del redondeo. Números no representables: NaN.\r\n<br>Caracteres. Codificaciones. El estandar ASCII. El estándar UTF.\r\n<br>Listas de caracteres. Método del marcador de fin de lista.\r\n<br>Operaciones básicas con cadenas (comparación, concatenación, subcadenas, búsqueda, sustitución, llenado).\r\n<br>Otros tipos de datos atómicos. Tipos enumerados (enum).\r\n<br>Aplicación: programas de un solo uso. Línea de órdenes.', '2017-04-20 21:38:07');
 
 -- --------------------------------------------------------
 
@@ -408,6 +417,64 @@ CREATE TABLE `foro_msj` (
   `msj` text COLLATE utf8_spanish_ci NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `foro_msj`
+--
+
+INSERT INTO `foro_msj` (`id`, `id_foro`, `user`, `msj`, `fecha`) VALUES
+(1, 2, '10101010', 'Mensaje Prueba', '2017-04-20 22:42:02'),
+(2, 2, '10101010', 'Mensaje Prueba', '2017-04-20 22:42:02'),
+(3, 6, '10101010', 'Mensajes de Prueba', '2017-04-20 23:21:52'),
+(4, 6, '10101010', 'Mensaje de Prueba', '2017-04-20 23:21:52'),
+(5, 6, '10101010', 'Supongamos también, que en ciertos puntos del camino se colocan dos tipos de sensores, tres velocímetros y tres cronómetros. Estos sensores determinarán la velocidad del coche al pasar por los puntos en cuestión y también el tiempo transcurrido desde el inicio del movimiento, los que se indican en las pantallas de cada uno.', '2017-04-20 23:38:27'),
+(6, 6, 'SAHM720522FA4', 'Mensaje de profe', '2017-04-20 23:50:15'),
+(7, 6, 'SAHM720522FA4', 'Mensaje desde foro<br>', '2017-04-21 00:54:13'),
+(8, 6, 'SAHM720522FA4', 'Nuevo mensaje desde foro<br>', '2017-04-21 00:58:18'),
+(9, 6, 'SAHM720522FA4', 'Mensaje con video <br><iframe allowfullscreen="true" src="https://www.youtube.com/embed/Mfmf83XC5Uw" frameborder="0" width="560" height="315"></iframe><br>', '2017-04-21 01:00:03'),
+(14, 6, 'SAHM720522FA4', 'Mensaje de prueba 123<br>', '2017-04-21 01:03:24'),
+(15, 6, 'SAHM720522FA4', 'Otro mensaje de prueba 456<br>', '2017-04-21 01:03:35'),
+(16, 6, 'SAHM720522FA4', '<iframe allowfullscreen="true" src="https://www.youtube.com/embed/4rh-ZyM5SWw" frameborder="0" width="560" height="315"></iframe>', '2017-04-21 01:04:28'),
+(18, 5, 'SAHM720522FA4', 'Mensaje Tema dos<br>', '2017-04-21 01:29:24'),
+(19, 5, 'SAHM720522FA4', 'Nuevo mensaje<br>', '2017-04-21 01:37:28'),
+(20, 5, 'SAHM720522FA4', 'Otro mensaje mas<br>', '2017-04-21 01:38:35'),
+(23, 3, 'SAHM720522FA4', 'Mensaje', '2017-04-21 01:46:24'),
+(24, 2, 'SAHM720522FA4', 'Mensaje', '2017-04-21 01:47:39'),
+(25, 3, 'SAHM720522FA4', 'Otreo mas', '2017-04-21 01:48:30'),
+(26, 5, 'SAHM720522FA4', 'mensajeee', '2017-04-21 01:49:50'),
+(27, 6, 'SAHM720522FA4', 'Otreo mas', '2017-04-21 01:50:05'),
+(28, 2, 'SAHM720522FA4', 'Mensajeee', '2017-04-21 01:50:18'),
+(29, 2, 'SAHM720522FA4', 'Mensaje 123', '2017-04-21 01:50:54'),
+(30, 6, 'SAHM720522FA4', 'Mensajeee 123', '2017-04-21 01:51:37'),
+(31, 6, 'SAHM720522FA4', 'Mensaje 123', '2017-04-21 01:52:32'),
+(33, 2, 'SAHM720522FA4', 'Mensaje 456', '2017-04-21 01:53:30'),
+(34, 2, 'SAHM720522FA4', 'mensaje 789', '2017-04-21 01:54:02'),
+(35, 6, 'SAHM720522FA4', 'mensaje', '2017-04-21 01:54:39'),
+(36, 6, 'SAHM720522FA4', 'mensaje!', '2017-04-21 01:55:00'),
+(37, 5, 'SAHM720522FA4', 'mensaje 1', '2017-04-21 01:58:41'),
+(41, 2, 'SAHM720522FA4', 'Mensaje', '2017-04-21 02:06:12'),
+(43, 2, 'SAHM720522FA4', 'sdfsdf', '2017-04-21 02:07:56'),
+(44, 3, 'SAHM720522FA4', 'ola', '2017-04-21 02:09:56'),
+(45, 3, 'SAHM720522FA4', '123', '2017-04-21 02:11:07'),
+(46, 2, 'SAHM720522FA4', 'Hola Hola', '2017-04-21 02:12:43'),
+(47, 2, 'SAHM720522FA4', 'Mas temas', '2017-04-21 02:14:56'),
+(48, 2, 'SAHM720522FA4', 'Mensaje mensaje', '2017-04-21 02:16:03'),
+(49, 2, 'SAHM720522FA4', 'undefined', '2017-04-21 02:16:03'),
+(50, 2, 'SAHM720522FA4', 'otro mas', '2017-04-21 02:16:24'),
+(51, 2, 'SAHM720522FA4', 'undefined', '2017-04-21 02:16:25'),
+(52, 6, 'SAHM720522FA4', 'Mensaje', '2017-04-21 02:20:15'),
+(53, 5, 'SAHM720522FA4', 'Mensaje ABC', '2017-04-21 02:20:38'),
+(54, 2, 'SAHM720522FA4', 'mensaje', '2017-04-21 02:21:41'),
+(55, 2, 'SAHM720522FA4', 'undefined', '2017-04-21 02:21:41'),
+(56, 6, 'SAHM720522FA4', 'Nuevo mensaje', '2017-04-21 02:23:08'),
+(57, 2, 'SAHM720522FA4', 'ABC', '2017-04-21 02:23:18'),
+(58, 2, 'SAHM720522FA4', '123ABC', '2017-04-21 02:27:13'),
+(59, 2, 'SAHM720522FA4', 'undefined', '2017-04-21 02:27:13'),
+(60, 6, 'SAHM720522FA4', 'Tema', '2017-04-21 02:28:46'),
+(61, 2, 'SAHM720522FA4', 'Tema', '2017-04-21 02:29:37'),
+(62, 2, 'SAHM720522FA4', 'ABC', '2017-04-21 02:29:50'),
+(63, 6, 'SAHM720522FA4', 'ABC', '2017-04-21 02:30:02'),
+(64, 6, 'SAHM720522FA4', 'ABC', '2017-04-21 02:30:08');
 
 -- --------------------------------------------------------
 
@@ -727,8 +794,7 @@ ALTER TABLE `exam_alum`
 -- Indices de la tabla `foro`
 --
 ALTER TABLE `foro`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `rfc` (`rfc`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `foro_msj`
@@ -813,12 +879,12 @@ ALTER TABLE `examenes`
 -- AUTO_INCREMENT de la tabla `foro`
 --
 ALTER TABLE `foro`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `foro_msj`
 --
 ALTER TABLE `foro_msj`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 --
 -- AUTO_INCREMENT de la tabla `grupos`
 --
@@ -843,12 +909,6 @@ ALTER TABLE `profe_msj`
 --
 ALTER TABLE `exam_alum`
   ADD CONSTRAINT `elimexlum` FOREIGN KEY (`noc`) REFERENCES `alumnos` (`noc`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `foro`
---
-ALTER TABLE `foro`
-  ADD CONSTRAINT `elimpostforo` FOREIGN KEY (`rfc`) REFERENCES `profesores` (`rfc`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `foro_msj`

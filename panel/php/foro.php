@@ -38,6 +38,37 @@ class Foro{
     	
     }
     
+     public function foroAlumno(){
+    $this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	   $grupo = explode('-', $_COOKIE['data']);
+       $topico = '';  
+ 	   $enco = false;
+ 	     	 	
+    		$sql = "SELECT * FROM foro WHERE foro.id_gru = ".$grupo[1].' ORDER BY foro.fecha DESC;';
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+			    while($row = $result->fetch_assoc()) {
+                    $topico = '<div id="tema" class="tema"><br>'.$row['contenido'].'</div>';
+                    $topico .= $this->comentarios($row['id']);
+                    setcookie('tema', $row['id'], 0, '/');
+                    break;
+			    }
+			    $enco = true;
+			 }
+        
+
+			 
+		if($enco) {
+            return $topico;
+        }
+        else return -1;	
+    	
+    	$this->conn->close();
+    	
+    }
+    
     public function Tema(){
     $this->conn = new Conexion('../../../php/datosServer.php');
 		$this->conn = $this->conn->conectar();

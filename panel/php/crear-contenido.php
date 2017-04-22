@@ -37,8 +37,13 @@ class Contenido{
     public function guardarComentario($cual) {
     	$this->conn = new Conexion('../../php/datosServer.php');
 		$this->conn = $this->conn->conectar();
-  	 	
-    		$sql = "INSERT INTO foro_msj(id_foro, user, msj, fecha) VALUES(".$_POST['id'].",'".$_SESSION['profesor']."', '".$_POST['com']."',CURRENT_TIMESTAMP);";
+  	 	$quien = '';
+        if(isset($_SESSION['profesor'])){
+            $quien = $_SESSION['profesor'];
+        }else{
+            $quien = $_SESSION['alumno'];
+        }
+    		$sql = "INSERT INTO foro_msj(id_foro, user, msj, fecha) VALUES(".$_POST['id'].",'".$quien."', '".$_POST['com']."',CURRENT_TIMESTAMP);";
 			if ($this->conn->query($sql) === TRUE) {
 			    echo $cual;
 			} else {

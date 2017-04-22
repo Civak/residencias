@@ -26,7 +26,8 @@ class Alumno{
 								        <ul id="groups-'.$row['id'].'" class="hide groups">
 											<li data-component="dropdown" data-target="#re-'.$row['id'].'">
 											<i class="fa fa-check-square"></i> Revisar Curso</li>
-											<li id="fo"><i class="fa fa-comments-o"></i> Foro</li>
+											<li data-component="dropdown" data-target="#fo-'.$row['id'].'">
+                                            <i class="fa fa-comments-o"></i> Foro</li>
 								        </ul>
 								        </ul>
 								        <div id="acciones">
@@ -40,6 +41,12 @@ class Alumno{
 <li id="re-pe"><a href=""><i class="fa fa-folder-open-o"></i> Tareas</a></li>
 <li id="re-ta"><a href=""><i class="fa fa-archive"></i> Tareas Entregadas</a></li>
 <li id="re-te"><a href=""><i class="fa fa-file-text-o"></i> Temario</a></li>
+											    </ul>
+											</div>
+                                            <div class="dropdown hide" id="fo-'.$row['id'].'">
+											    <a href="" class="close show-sm"></a>
+											    <ul id="crear-contenido">
+													  <li id="ve-fo"><a href=""><i class="fa fa-pencil"></i> Ver Foro</a></li>
 											    </ul>
 											</div>
 											</span></div></div>';

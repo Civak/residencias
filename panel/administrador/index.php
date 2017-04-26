@@ -72,7 +72,7 @@ include('../includes/headers.php');
     <ul>
         <li><a id="agregar" href="">Altas</a></li>
         <li><a id="editar" href="">Catalogo</a></li>
-        <li><a href="">Cambiar contraseña</a></li>
+        <li><a id="pass" href="">Cambiar contraseña</a></li>
     </ul>
 </div>
 

@@ -23,8 +23,12 @@ $(document).ready(function () {
 	if (evaluarModal(form)) {
         switch(form){
             case 'personal-mod':
-                console.log('funciona');
                 Cookies.set('opcion','personal-mod');
+                guardar($('div#contenido').find("form#"+form)[0], Cookies.get('file'));
+                break;
+            case 'personal-pass':
+                console.log('funciona');
+                Cookies.set('opcion','personal-pass');
                 guardar($('div#contenido').find("form#"+form)[0], Cookies.get('file'));
                 break;
             default: 
@@ -219,6 +223,9 @@ $(document).ready(function () {
             case 'personal-mod': 
 				return validarPersonalMod(inputs, labels);
 			break;
+            case 'personal-pass': 
+				return validarPerPass(inputs, labels);
+			break;
 			case 'grupos-agregar': 
 				return validarGrupo(inputs, labels);
 			break;
@@ -272,6 +279,25 @@ function validarMateria(inputs, labels) {
 				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+' (demasiado corta)'+msjerror2);
 				return false;
 			}
+		}
+		return true;
+		}
+    
+    		/// Valida personal
+	function validarPerPass(inputs, labels, modal) {
+		var rfc = /^[A-Za-zÑñ]{4}[0-9]{6}[A-Za-z0-9]{3}$/;
+		
+		for (var i = 0; i < inputs.length; i++) {
+			
+			if ((inputs[i].length != 13 || !rfc.test(inputs[i])) && i == 0) {
+				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
+				return false;
+				}
+
+			if (inputs[i].length == 0 || inputs[i].length > 64 || inputs[i].length < 4) {
+					$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
+					return false;
+				}
 		}
 		return true;
 		}
@@ -338,7 +364,7 @@ function guardar(form, file) {
                         break;
                   default: 
                   	  alertify.log(infoRegreso);
-                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logo.png" alt="">');
+                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
                   }
                	},
                   error: function () {
@@ -360,7 +386,7 @@ function guardar(form, file) {
                 		}
                 		else{
                 			alertify.log(infoRegreso);
-                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logo.png" alt="">');
+                  	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logobg.png" alt="">');
                 		}
                 	}
             });

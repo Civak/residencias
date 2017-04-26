@@ -194,10 +194,26 @@ class Personal{
     public function eliminarPersonal() {
     	$this->conn = new Conexion('../../php/datosServer.php');
 		$this->conn = $this->conn->conectar();
- 	 	
+        
     		$sql = "DELETE FROM profesores WHERE profesores.rfc = '".$_POST['dato1']."';";
 			if ($this->conn->query($sql) === TRUE) {
 			    echo 1;
+			} else {
+			    echo -1;
+			}
+    	$this->conn->close();
+    	}
+    /// ---------------- cambia pass profesor o personal
+    public function passPersonal() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	 	/// Esta linea oculta el warning de cifrado, no es relevante.
+    	error_reporting(E_ERROR | E_WARNING | E_PARSE);
+ 	    $pass = crypt($_POST['pass']); 
+        
+    		$sql = "UPDATE profesores SET profesores.pass = '".$pass."' WHERE profesores.rfc = '".$_POST['rfc']."';";
+			if ($this->conn->query($sql) === TRUE) {
+			    echo 'Cambio de contraseña correcto...';
 			} else {
 			    echo -1;
 			}
@@ -223,6 +239,9 @@ class Personal{
         break;
         case 'personal-mod':
             $datos->modPersonal();
+        break;
+        case 'personal-pass':
+            $datos->passPersonal();
         break;
     }
 }

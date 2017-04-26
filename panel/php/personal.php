@@ -89,7 +89,7 @@ class Personal{
 		$this->conn = $this->conn->conectar();
  	   $cat = ''; 	
  	   $encontrado = false; 	
-    		$sql = "CALL catalogoPersonal('".$_SESSION['admin']."', '".$_POST['dato1']."');";
+    		$sql = "CALL catalogoPersonal('".$_POST['dato1']."');";
 			$result = $this->conn->query($sql);
 
 			if ($result->num_rows > 0) {
@@ -111,18 +111,31 @@ class Personal{
 			    		if(strcmp($row["activo"], 'S') == 0) $activo = '<span class="label  success">Activo</span>';
 			    		else $activo = '<span class="label error">No Activo</span>';
 			    		
-			    	  $cat .= "<br><hr><span class='label focus'>RFC: ".$row['rfc']."</span><br>";
+			    	 $cat .= "<div id='".$row['rfc']."'><br><hr><span class='label focus'>RFC: ".$row['rfc']."</span><br>";
 			        $cat .= "<div class='row'>";
-			        $cat .= "<div class='col-9'><div class=form-item'><b>Nombre:</b> ".$row['nombre']." ".$row['apepat']." ".$row['apemat']."<br>&middot; ".$tipo." de 
-			        ".$row['carre']."<br>".$activo."</div></div>";
-			        $cat .= "<div class='col-1 offset-1' id='".$row['id']."'><i style='cursor: pointer;' class='fa fa-edit label badge focus outline' id='editar-per'></i> <i style='cursor: pointer;' id='eliminar-per' class='fa fa-remove label badge error outline'></i></div>";
-			        $cat .= "</div>";
+			        $cat .= "<div class='col-9'><div class=form-item'><b>Nombre:</b> ".$row['nombre']." ".$row['apepat']." ".$row['apemat']."<br>&middot; ".$tipo."<br>".$activo."</div></div>";
+			        $cat .= "<div class='col-1 offset-1' id='".$row['rfc']."'><i style='cursor: pointer;' class='fa fa-edit label badge focus outline' id='editar-per'></i> <i style='cursor: pointer;' id='eliminar-per' class='fa fa-remove label badge error outline'></i></div>";
+			        $cat .= "</div></div>";
 			    }
 			   $encontrado = true;
 			} 
 			
 			if($encontrado) echo $cat;
 			else '<div class="message error animated fadeIn" data-component="message">No hay Personal registrado...</div>';
+    	$this->conn->close();
+    	}
+    
+    /// ---------------- Elimina profesor o personal
+    public function eliminarPersonal() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	 	
+    		$sql = "DELETE FROM profesores WHERE profesores.rfc = '".$_POST['dato1']."';";
+			if ($this->conn->query($sql) === TRUE) {
+			    echo 1;
+			} else {
+			    echo -1;
+			}
     	$this->conn->close();
     	}
 }
@@ -139,6 +152,9 @@ class Personal{
         break;
         case 'personal-editar':
             $datos->catalogoPersonal();
+        break;
+         case 'personal-eliminar':
+            $datos->eliminarPersonal();
         break;
     }
 }

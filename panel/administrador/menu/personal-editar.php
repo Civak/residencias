@@ -46,6 +46,49 @@
 											  animationOut: 'fadeOut',
 											  size: 'small'
 										});
+                                    
+                                       $('form#personal-editar').on('click','i', function(){
+                                          var tipo = $(this).attr('id');
+                                          var quien = $(this).parent('div').attr('id');
+                                           
+                                          switch(tipo){
+                                              case 'editar-per':
+                                                  
+                                                  break;
+                                              case 'eliminar-per':
+                                                   alertify.confirm('Eliminarás el/la Profesor/a selecionado, ¿deseas continuar?',
+                                                        function () {
+                                                            Cookies.set('opcion', 'personal-eliminar');
+                                                            eliminarDatos(quien, '', 'personal.php');
+                                                        }, function() {
+
+                                                        });
+                                                  break;
+                                                     }
+                                       });
+                                    
+        function eliminarDatos(dato1, dato2, file) {
+		
+		$.ajax({ 
+				data: {'dato1': dato1, 'dato2': dato2},
+                url: '../php/'+file,
+                type: 'POST',
+					 async: false,
+                success: function (infoRegreso) {
+                   // console.log(infoRegreso+dato1);
+                	switch (parseInt(infoRegreso)) {
+                		case -1:
+							alertify.error('Ha ocurrido un error... intenta nuevamente.');
+						break;
+						case 1:
+                			alertify.log('Profesor eliminado correctamente.');
+                            Cookies.set('opcion', 'personal-editar');
+                            $('div#cat-personal').find('div#'+dato1).remove();
+                  		break;
+                		}
+                	}
+            });
+		}
 						    	});
 						    </script>
 						</form>

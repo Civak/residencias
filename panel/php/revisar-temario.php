@@ -104,6 +104,55 @@ public function ConsultarUnidades(){
 				}else echo '<div class="message error" data-component="message">La matería aún no tiene unidades, añade unidades...<span class="close small"></span></div>';	
  	   $this->conn->close();
 		}
+    
+     public function ConsultarExamenes(){
+		$this->conn = new Conexion('../../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+ 	   $grupo = explode('-', $_COOKIE['data']);
+ 	   $sql = "SELECT * FROM unidades WHERE unidades.id_grup = ".$grupo[1];
+ 	   $result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				echo $this->Examenes($result->num_rows, $grupo[1]);
+				}else echo '<div class="message error" data-component="message">La matería aún no tiene examenes para realizar<span class="close small"></span></div>';	
+ 	   $this->conn->close();
+		}
+    
+    			   /// ----------- Consulta termario con sus tareas correspondientes
+    public function Examenes($lim, $grupo) {
+ 	   $unidades = '<div class="temario"><div id="my-collapse" data-component="collapse">';
+ 	   
+ 	   for($unidad = 1; $unidad <= intval($lim);$unidad++) {
+ 	   	$this->conn->next_result();  	 	
+    		$sql = "SELECT * FROM examenes WHERE examenes.id_mat = ".$grupo." AND examenes.unidad = ".$unidad." GROUP BY examenes.id;";
+			$result = $this->conn->query($sql);
+
+			if ($result->num_rows > 0) {
+				$unidades .= '<div class="header-topic"><a id=u-"'.$unidad.'" href="#box-'.$unidad.'" class="collapse-toggle">Unidad: '.$unidad.'</a></div>';
+			   $unidades .= '<div class="collapse-box hide" id="box-'.$unidad.'"><span class="desc">Total de Tareas: '.$result->num_rows.'</span><hr>'; 
+                
+			    while($row = $result->fetch_assoc()) {
+			    	$unidades .= '<div class="row edit-tareas" id="t-'.$row['id'].'"><hr><div class="col col-9"><i class="fa fa-clipboard"></i> <a id="t-'.$row['id'].'" data-component="modal" data-target="#tareas-info">Examen</a><br>';
+			    	$unidades .= '<span class="label tag success">Fecha Inicio: '.$row['fec_ini'].'</span>&nbsp;&nbsp;&nbsp;<span class="label tag error"> Fecha Límite: '.$row['fec_lim'].'</span></div>';
+                    
+                    
+                    if(strtotime($row['fec_ini']) <= strtotime(date('Y-m-d H:i:s')) && strtotime($row['fec_lim']) >= strtotime(date('Y-m-d H:i:s'))){
+			    	$unidades .= '<div class="col col-2 offset-1"><button id="env-'.$row['id'].'" class="button small">Comenzar</button></div></div><hr>';
+                    }else{
+                    $unidades .= '<div class="col col-2 offset-1"><button class="button disabled small">Comenzar</button></div></div><hr>';   
+                    }
+                    
+			    	
+			    }
+			   $unidades .= '</div>';  
+			 }else{
+			 		$unidades .= '<div class="header-topic"><a id=u-"'.$row['unidad'].'" href="#box-'.$unidad.'" class="collapse-toggle">Unidad: '.$unidad.'</a></div>';
+			    	$unidades .= '<div class="collapse-box hide" id="box-'.$unidad.'"><br><div class="message error" data-component="message">La unidad aún no tiene exámenes pendientes.<span class="close small"></span></div></div>';
+			 }
+		}
+			 
+		return $unidades.'</div>';
+    	}
 		
 			   /// ----------- Consulta termario con sus tareas correspondientes
     public function Tareas($lim, $grupo) {

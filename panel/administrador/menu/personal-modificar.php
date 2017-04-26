@@ -59,6 +59,7 @@ $conn->close();
 								        <label>RFC</label>
 								        <?php
 								        echo '<input value="'.$infoProf[0].'" data-tipso="El RFC tiene 13 caracteres."  type="text" id="rfc" name="rfc" class="width-100">';
+                                        echo '<input value="'.$infoProf[0].'" type="hidden" id="oldrfc" name="oldrfc" class="width-100">';
 								        ?>
 								    </div>
 								    

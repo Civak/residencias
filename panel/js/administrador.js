@@ -288,11 +288,11 @@ function validarMateria(inputs, labels) {
 				return false;
 				}
 
-			if ((inputs[i].length == 0 || inputs[i].length > 64) && (i >= 1 && i <= 4)) {
+			if ((inputs[i].length == 0 || inputs[i].length > 64) && (i >= 1 && i <= 5)) {
 					$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
 					return false;
 				}
-			if (i == 5 && !regex.test(inputs[i])){
+			if (i == 6 && !regex.test(inputs[i])){
 				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
 				return false;
 			}
@@ -327,6 +327,7 @@ function guardar(form, file) {
                 //¿que hace antes de enviar?
                 },
                 success: function (infoRegreso) {
+                   // console.log(infoRegreso);
                     switch(parseInt(infoRegreso))
                     {
                	case -1:
@@ -336,7 +337,6 @@ function guardar(form, file) {
                        $('div#contenido').find('div#msj').html(msjerror3+'Ya existe ese registro, verifica RFC nuevamente.'+msjerror4);
                         break;
                   default: 
-                  	  console.log(infoRegreso);
                   	  alertify.log(infoRegreso);
                   	  $('div#contenido').html('<img class="animated fadeIn" src="../../img/logo.png" alt="">');
                   }

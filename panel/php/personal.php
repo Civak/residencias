@@ -47,12 +47,44 @@ class Personal{
 		$this->conn = $this->conn->conectar();
 		
     	$rfc = strtoupper($_POST['rfc']);
+        
+        if(strcmp($rfc, $_POST['oldrfc']) !== 0){
     	if($this->verificarProfe($rfc)) {
     		echo -2;
     	}
     	else{
 			$this->conn->next_result();
-            $sql = "DELETE FROM roles WHERE roles.rfc = '".$_POST['rfc']."';";
+            $sql = "DELETE FROM roles WHERE roles.rfc = '".$rfc."';";
+			if ($this->conn->query($sql) === TRUE) {
+                
+            $this->conn->next_result();	
+            $carre = array();
+            $carreras = new GenerarCombos('../../php/datosServer.php');
+            $carre = $carreras->obtenerCarreras($this->conn);
+
+			$this->conn->next_result();
+    		$sql = "CALL modPersonal('".$rfc."', '".strtoupper($_POST['nombre'])."', '".strtoupper($_POST['apep'])."', '".strtoupper($_POST['apem'])."', '".$_POST['carrera']."', '".$_POST['ema']."','".$_POST['activo']."','".$_POST['oldrfc']."');";
+			if ($this->conn->query($sql) === TRUE) {
+			    $this->altasProCor($carre, $rfc, 'P','-pro-car');
+			    $this->altasProCor($carre, $rfc, 'C','-cor-car');
+			    		echo 'Profesor actualizado exitosamente...';
+			} else {
+			    echo -1;
+			}
+            }else{
+                
+                -1;
+            }
+		}
+        }else{
+            $this->actPersonal($rfc);
+        }
+            
+    	$this->conn->close();
+    	}
+    
+    public function actPersonal($rfc){
+        $sql = "DELETE FROM roles WHERE roles.rfc = '".$_POST['rfc']."';";
 			if ($this->conn->query($sql) === TRUE) {
                 
             $this->conn->next_result();	
@@ -61,7 +93,7 @@ class Personal{
             $carre = $carreras->obtenerCarreras($this->conn);
 	   
 			$this->conn->next_result();
-    		$sql = "CALL guardarNvoProfe('".$rfc."', '".strtoupper($_POST['nombre'])."', '".strtoupper($_POST['apep'])."', '".strtoupper($_POST['apem'])."', '".$_POST['carrera']."', '".$_POST['ema']."','".$_POST['activo']."');";
+    		$sql = "CALL modPersonal('".$rfc."', '".strtoupper($_POST['nombre'])."', '".strtoupper($_POST['apep'])."', '".strtoupper($_POST['apem'])."', '".$_POST['carrera']."', '".$_POST['ema']."','".$_POST['activo']."','".$_POST['oldrfc']."');";
 			if ($this->conn->query($sql) === TRUE) {
 			    $this->altasProCor($carre, $rfc, 'P','-pro-car');
 			    $this->altasProCor($carre, $rfc, 'C','-cor-car');
@@ -72,10 +104,7 @@ class Personal{
             }else{
                 -1;
             }
-		}
-            
-    	$this->conn->close();
-    	}
+    }
     	/// Verifica si existe el profe antes de registrarlo
     	public function verificarProfe($rfc) {
 					$result = $this->conn->query("SELECT * FROM profesores WHERE profesores.rfc = '".$rfc."';");

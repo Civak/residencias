@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-04-2017 a las 04:46:30
+-- Tiempo de generación: 26-04-2017 a las 05:05:49
 -- Versión del servidor: 10.1.13-MariaDB
 -- Versión de PHP: 7.0.6
 
@@ -72,8 +72,11 @@ INSERT INTO tareas(tareas.noc, tareas.id_act, tareas.docs, tareas.contenido, tar
 CREATE DEFINER=`root`@`localhost` PROCEDURE `catalogoGrupos` (IN `mate` INT(11))  NO SQL
 SELECT gru.id, gru.grupo, DATE_FORMAT(gru.fecha, 'Registrado: %e %b %Y') AS fecha, gru.rfc, gru.activo, mat.materia, car.carrera, CONCAT(pro.nombre,' ',pro.apepat,' ', pro.apemat) AS nom FROM grupos AS gru INNER JOIN materias AS mat ON gru.materia = mat.id INNER JOIN carreras AS car ON mat.carrera = car.id INNER JOIN profesores AS pro ON gru.rfc = pro.rfc WHERE gru.materia = mate$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `catalogoPersonal` (IN `rf` VARCHAR(13), IN `car` VARCHAR(4))  NO SQL
-SELECT *, carreras.carrera AS carre FROM  profesores AS pro INNER JOIN roles ON pro.rfc = roles.rfc INNER JOIN carreras ON roles.carrera = carreras.id WHERE pro.rfc = rf AND pro.carrera = car$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `catalogoPersonal` (IN `car` VARCHAR(4))  NO SQL
+SELECT profesores.rfc, profesores.nombre, profesores.apepat, profesores.apemat, profesores.activo, roles.rol 
+		FROM  profesores 
+		INNER JOIN roles ON profesores.rfc = roles.rfc
+		WHERE roles.carrera = car$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `consultarProfes` (IN `car` VARCHAR(4))  NO SQL
 SELECT pro.rfc, CONCAT(pro.nombre,' ',pro.apepat,' ', pro.apemat) AS nom FROM roles INNER JOIN profesores as pro ON roles.rfc = pro.rfc WHERE roles.carrera = car AND roles.rol = 'P' AND pro.activo = 'S'$$
@@ -122,6 +125,9 @@ SELECT * FROM alumnos WHERE alumnos.noc = noo$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `loginPersonal` (IN `rf` VARCHAR(13), IN `ro` SET('A','C','P'))  NO SQL
 SELECT pro.rfc, pro.pass, pro.nombre, roles.rol FROM profesores AS pro INNER JOIN roles ON pro.rfc = roles.rfc WHERE pro.rfc = rf AND roles.rol = ro$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `modPersonal` (IN `rf` VARCHAR(13), IN `nom` VARCHAR(64), IN `ap` VARCHAR(64), IN `am` VARCHAR(64), IN `car` VARCHAR(4), IN `ema` VARCHAR(64), IN `act` SET('S','N'), IN `oldrfc` VARCHAR(13))  NO SQL
+UPDATE profesores SET profesores.rfc = rf, profesores.nombre = nom, profesores.apepat = ap, profesores.apemat = am, profesores.carrera = car, profesores.email = ema, profesores.activo = act WHERE profesores.rfc = oldrfc$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `msjRecibidos` (IN `rf` VARCHAR(13))  NO SQL
 BEGIN
@@ -474,7 +480,9 @@ INSERT INTO `foro_msj` (`id`, `id_foro`, `user`, `msj`, `fecha`) VALUES
 (61, 2, 'SAHM720522FA4', 'Tema', '2017-04-21 02:29:37'),
 (62, 2, 'SAHM720522FA4', 'ABC', '2017-04-21 02:29:50'),
 (63, 6, 'SAHM720522FA4', 'ABC', '2017-04-21 02:30:02'),
-(64, 6, 'SAHM720522FA4', 'ABC', '2017-04-21 02:30:08');
+(64, 6, 'SAHM720522FA4', 'ABC', '2017-04-21 02:30:08'),
+(65, 6, '13120451', 'Mensaje desde Alumno&nbsp;', '2017-04-22 22:52:04'),
+(66, 5, '13120451', 'Mensaje desde alumno', '2017-04-22 22:52:40');
 
 -- --------------------------------------------------------
 
@@ -591,7 +599,6 @@ INSERT INTO `materias` (`id`, `carrera`, `materia`) VALUES
 (2, 'INF', 'Telecomunicacion Tarde'),
 (3, 'ISC', 'Fundamentos de Progra'),
 (4, 'ITIC', 'Tecnologías móviles'),
-(5, 'CON', 'Contabilidad 1'),
 (6, 'ISC', 'GPS');
 
 -- --------------------------------------------------------
@@ -619,6 +626,7 @@ CREATE TABLE `profesores` (
 --
 
 INSERT INTO `profesores` (`rfc`, `nombre`, `apepat`, `apemat`, `email`, `telefono`, `carrera`, `foto`, `pass`, `cv`, `activo`) VALUES
+('ABCD131313ABC', 'JON DIEGO', 'SUJETO', 'SUJETO', 'sujeto@gmail.mx', NULL, 'ISC', 'user.png', '$1$Cg..jY0.$mk4Chy2WPCcXZ.5OOca5v1', NULL, 'N'),
 ('OIOO641128AB6', 'OCTAVIO SALUD', 'ORTIZ', 'ORTIZ', 'octavio@gmail.com', NULL, 'ISC', 'user.png', '$1$jG/.w03.$nKTEVVSoV7vQyYnOaTQvC.', NULL, 'S'),
 ('SAHM720522FA4', 'MIRIAM ZULMA', 'SANCHEZ', 'HERNANDEZ', 'mzulma@gmail.com', '4431231234', 'ISC', 'SAHM720522FA4.png', '$1$IpF7KVhB$meD4uUD1K86i2JZsIjjWr0', '\r\n	Docente del Departamento de Sistemas y Computación	', 'S'),
 ('VEFY860815NDA', 'MA. YANETH', 'VEGA', 'FLORES', 'yaneth@gmail.com', NULL, 'ISC', 'user.png', '$1$vm0.ML1.$tSLk0Z1JhZKKdZUzWgBxj.', NULL, 'S');
@@ -690,6 +698,8 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`rfc`, `carrera`, `rol`) VALUES
+('ABCD131313ABC', 'INF', 'P'),
+('ABCD131313ABC', 'ISC', 'P'),
 ('OIOO641128AB6', 'ISC', 'P'),
 ('SAHM720522FA4', 'INF', 'C'),
 ('SAHM720522FA4', 'ISC', 'A'),
@@ -884,7 +894,7 @@ ALTER TABLE `foro`
 -- AUTO_INCREMENT de la tabla `foro_msj`
 --
 ALTER TABLE `foro_msj`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 --
 -- AUTO_INCREMENT de la tabla `grupos`
 --

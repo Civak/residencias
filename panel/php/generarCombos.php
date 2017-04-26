@@ -53,13 +53,14 @@ class GenerarCombos
     	}
     	/// Obtiene la carrera del profesor a editar
     public function generarComboCarrerasEdit($carrera) {
-        $this->conectar();
+        $this->conn = new Conexion('../../../php/datosServer.php');
+        $this->conn = $this->conn->conectar();
         $combo = "";
         $sql = "SELECT * FROM carreras;";
         $result = $this->conn->query($sql);
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
-                if(strcmp($carrera, $row['idCarrera']) !== 0)
+                if(strcmp($carrera, $row['id']) !== 0)
 						$combo .= '<option value="'.$row['id'].'">'.$row['carrera'].'</option>';
 					 else $combo .= '<option value="'.$row['id'].'" selected>'.$row['carrera'].'</option>';
                 }
@@ -83,6 +84,6 @@ class GenerarCombos
             }
             echo $combo;
             $this->conn->close();
-    	} 
+    	}
 }
 ?>

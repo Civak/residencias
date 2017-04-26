@@ -21,7 +21,16 @@ $(document).ready(function () {
 	e.preventDefault();
 	var form = $(this).closest('form').attr('id');
 	if (evaluarModal(form)) {
-		guardar($('div#contenido').find("form#"+form)[0], Cookies.get('file'));
+        switch(form){
+            case 'personal-mod':
+                console.log('funciona');
+                Cookies.set('opcion','personal-mod');
+                guardar($('div#contenido').find("form#"+form)[0], Cookies.get('file'));
+                break;
+            default: 
+                guardar($('div#contenido').find("form#"+form)[0], Cookies.get('file'));
+                   }
+		
 	}
 });
 
@@ -207,6 +216,9 @@ $(document).ready(function () {
 			case 'personal-agregar': 
 				return validarPersonal(inputs, labels);
 			break;
+            case 'personal-mod': 
+				return validarPersonalMod(inputs, labels);
+			break;
 			case 'grupos-agregar': 
 				return validarGrupo(inputs, labels);
 			break;
@@ -258,6 +270,30 @@ function validarMateria(inputs, labels) {
 			}
 			if (i == 6 && inputs[i].length < 4){
 				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+' (demasiado corta)'+msjerror2);
+				return false;
+			}
+		}
+		return true;
+		}
+    
+    		/// Valida personal
+	function validarPersonalMod(inputs, labels, modal) {
+		var regex = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
+		var rfc = /^[A-Za-zÑñ]{4}[0-9]{6}[A-Za-z0-9]{3}$/;
+		
+		for (var i = 0; i < inputs.length; i++) {
+			
+			if ((inputs[i].length != 13 || !rfc.test(inputs[i])) && i == 0) {
+				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
+				return false;
+				}
+
+			if ((inputs[i].length == 0 || inputs[i].length > 64) && (i >= 1 && i <= 4)) {
+					$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
+					return false;
+				}
+			if (i == 5 && !regex.test(inputs[i])){
+				$('div#contenido').find('div#msj').html(msjerror1+labels[i]+msjerror2);
 				return false;
 			}
 		}

@@ -53,7 +53,8 @@
                                            
                                           switch(tipo){
                                               case 'editar-per':
-                                                  
+                                               Cookies.set('dato', quien);
+                                               $('div#contenido').load('menu/personal-modificar.php');   
                                                   break;
                                               case 'eliminar-per':
                                                    alertify.confirm('Eliminarás el/la Profesor/a selecionado, ¿deseas continuar?',

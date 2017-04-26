@@ -40,6 +40,42 @@ class Personal{
 		}
     	$this->conn->close();
     	}
+    
+    	/// ------ Altas profesor
+		public function modPersonal() {
+    	$this->conn = new Conexion('../../php/datosServer.php');
+		$this->conn = $this->conn->conectar();
+		
+    	$rfc = strtoupper($_POST['rfc']);
+    	if($this->verificarProfe($rfc)) {
+    		echo -2;
+    	}
+    	else{
+			$this->conn->next_result();
+            $sql = "DELETE FROM roles WHERE roles.rfc = '".$_POST['rfc']."';";
+			if ($this->conn->query($sql) === TRUE) {
+                
+            $this->conn->next_result();	
+            $carre = array();
+            $carreras = new GenerarCombos('../../php/datosServer.php');
+            $carre = $carreras->obtenerCarreras($this->conn);
+	   
+			$this->conn->next_result();
+    		$sql = "CALL guardarNvoProfe('".$rfc."', '".strtoupper($_POST['nombre'])."', '".strtoupper($_POST['apep'])."', '".strtoupper($_POST['apem'])."', '".$_POST['carrera']."', '".$_POST['ema']."','".$_POST['activo']."');";
+			if ($this->conn->query($sql) === TRUE) {
+			    $this->altasProCor($carre, $rfc, 'P','-pro-car');
+			    $this->altasProCor($carre, $rfc, 'C','-cor-car');
+			    		echo 'Profesor actualizado exitosamente...';
+			} else {
+			    echo -1;
+			}
+            }else{
+                -1;
+            }
+		}
+            
+    	$this->conn->close();
+    	}
     	/// Verifica si existe el profe antes de registrarlo
     	public function verificarProfe($rfc) {
 					$result = $this->conn->query("SELECT * FROM profesores WHERE profesores.rfc = '".$rfc."';");
@@ -155,6 +191,9 @@ class Personal{
         break;
          case 'personal-eliminar':
             $datos->eliminarPersonal();
+        break;
+        case 'personal-mod':
+            $datos->modPersonal();
         break;
     }
 }

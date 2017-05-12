@@ -69,8 +69,12 @@ include('../includes/headers.php');
 
 <footer class="footer">
 	<div class="row">
-		<div class="col col-4">Redes Sociales</div>	
-		<div class="col col-4 offset-4">Contacto</div>
+		<div class="col col-4">
+        <i class="fa fa-facebook-official fa-2x"></i>&nbsp;&nbsp;&nbsp; 
+            <i class="fa fa-twitter fa-2x"></i>&nbsp;&nbsp;&nbsp;
+            <i class="fa fa-google fa-2x"></i>
+        </div>	
+		<div class="col col-4 offset-4">Email: casit.itm@gmail.com</div>
 	</div>
 </footer>
 
